@@ -1,0 +1,111 @@
+# Web site
+
+- name: App {{ username }} - Creates directory /opt/{{ username }}/{{ target_dir }}/www
+  file:
+    path: /opt/{{ username }}/{{ target_dir }}/www
+    state: directory
+    owner: "{{ username }}"
+    group: "www-data"
+    mode: 0775
+  register: sumaris_app_missing
+
+- name: App {{ username }} - Check if App need update
+  copy:
+    content: "{{ app_version }}"
+    dest: /opt/{{ username }}/{{ target_dir }}/www/version.appup
+  check_mode: yes
+  when: (not sumaris_app_missing.changed)
+  register: sumaris_app_version
+
+- name:  App {{ username }} - App already installed
+  debug:
+    msg: "App already installed. Skipping installation"
+  when: (not sumaris_app_missing.changed and not sumaris_app_version.changed)
+
+- name: App {{ username }} - Download App (web build)
+  get_url:
+    url: "{{ app_file }}"
+    dest: /tmp/sumaris-app-{{ app_version }}.zip
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: 0755
+    checksum: "{{ app_hash_file }}"
+  when: (sumaris_app_missing.changed or sumaris_app_version.changed)
+
+- name: App {{ username }} - Clean previous version (web build)
+  shell: /bin/rm -rf /opt/{{ username }}/{{ target_dir }}/www/*
+  args:
+    warn: false # Disabling warnings
+    removes: /opt/{{ username }}/{{ target_dir }}/www/index.html
+  when: sumaris_app_version.changed
+
+- name: App {{ username }} - Extract App (web build)
+  unarchive:
+    src: /tmp/sumaris-app-{{ app_version }}.zip
+    dest: /opt/{{ username }}/{{ target_dir }}/www
+    owner: "{{ username }}"
+    group: www-data
+    mode: 0555
+    remote_src: yes
+  when: (sumaris_app_missing.changed or sumaris_app_version.changed)
+  notify: Restart nginx
+
+- name: App {{ username }} - Create App version file
+  copy:
+    content: "{{ app_version }}"
+    dest: /opt/{{ username }}/{{ target_dir }}/www/version.appup
+    owner: "{{ username }}"
+    group: www-data
+    mode: 0555
+  when: (sumaris_app_missing.changed or sumaris_app_version.changed)
+
+- name: App {{ username }} - Create directory /etc/letsencrypt/configs
+  file:
+    path: /etc/letsencrypt/configs
+    state: directory
+    owner: root
+  register: sumaris_app_cert_config
+
+- name: App {{ username }} - Generate letsencrypt configuration
+  template:
+    src: letsencrypt/conf.ini.j2
+    dest: /etc/letsencrypt/configs/{{ sumaris_host }}.ini
+  when: (sumaris_app_missing.changed or sumaris_app_version.changed or sumaris_app_cert_config.changed)
+  notify: Nginx HTTP
+
+- name: App {{ username }} - Cert bot
+  command: certbot -n --agree-tos --config /etc/letsencrypt/configs/{{ sumaris_host }}.ini certonly
+  args:
+    creates: /etc/letsencrypt/live/{{ sumaris_host }}/cert.pem
+
+- name: App {{ username }} - Nginx HTTPS
+  template:
+    src: templates/sites/sumaris.conf.j2
+    dest: /etc/nginx/conf.d/sumaris-{{ username }}.conf
+  notify: Restart nginx
+
+#- name: App {{ username }} - Configure certbot systemd service
+#  template:
+#    src: templates/systemd/certbot.service.j2
+#    dest: /usr/lib/systemd/system/certbot-sumaris-pod-{{ username }}.service
+#    owner: root
+#    mode: 0644
+#
+#- name: App {{ username }} - Configure certbot systemd timer
+#  template:
+#    src: templates/systemd/certbot.timer.j2
+#    dest: /usr/lib/systemd/system/certbot-sumaris-pod-{{ username }}.timer
+#    owner: root
+#    mode: 0644
+
+# TODO: change base URL ?
+# sed -i 's/baseUrl:"\/"/baseUrl:"\/cesium2\/"/g' ./cesium2/*.js
+
+- name: App {{ username }} - Clean up
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - /tmp/sumaris-app-{{ app_version }}.zip
+  ignore_errors: True
+  when: (sumaris_app_missing.changed or sumaris_app_version.changed)

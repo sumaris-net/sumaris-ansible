@@ -1,0 +1,23 @@
+username: test
+sumaris_host: '{{ username }}.{{ hostvars[inventory_hostname].default_domain }}'
+http_port: 8081
+db_port: 9002
+db_name: 'sumaris-{{ username }}'
+pod_salt: '{{ username }}@{{ sumaris_host }}'
+pod_password: '{{ username }}'
+admin_email: contact@e-is.pro
+db_type: 'hsqldb'
+app_name: SUMARiS
+base_path: ''
+db_reset: False
+nginx_default_server: False
+spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    properties:
+      mail.smtp:
+        auth: true
+        starttls:
+          enable: true
+          required: true

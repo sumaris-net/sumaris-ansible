@@ -1,0 +1,19 @@
+
+- name: Configure /etc/fail2ban/jail.local file
+  template:
+    src: templates/jail.local.j2
+    dest: /etc/fail2ban/jail.local
+  notify: Restart fail2ban
+
+- name: Set jail.conf file
+  replace:
+    path: "/etc/fail2ban/jail.conf"
+    regexp: 'port(\s+)=(\s+)ssh'
+    replace: 'port = {{ ansible_port }}'
+  notify: Restart fail2ban
+
+- name: Restart fail2ban
+  systemd:
+    name: fail2ban
+    state: restarted
+  when: os_release_centos.changed

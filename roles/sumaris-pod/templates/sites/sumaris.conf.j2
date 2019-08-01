@@ -1,0 +1,59 @@
+
+server {
+  listen 80;
+  listen [::]:80;
+
+  server_name {{ sumaris_host }};
+
+  include includes/letsencrypt.conf;
+
+  # redirect all HTTP requests to HTTPS with a 301 Moved Permanently response.
+  location / {
+    return 301 https://{{ sumaris_host }}$request_uri;
+  }
+} 
+
+server {
+  listen 443 ssl http2;
+  listen [::]:443 ssl http2;
+
+  server_name {{ sumaris_host }};
+
+  # SSL config
+  ssl_certificate /etc/letsencrypt/live/{{ sumaris_host }}/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/{{ sumaris_host }}/privkey.pem;
+  include includes/ssl.conf;
+  ssl_trusted_certificate /etc/letsencrypt/live/{{ sumaris_host }}/fullchain.pem;
+
+  # allow large uploads of files
+  client_max_body_size 20m;
+
+  root /opt/{{ username }}/{{ target_dir }}/www;
+  index index.html;
+
+  location ~ ^{{ base_path }}/(graphql|graphiql|api|core|service|download) {
+    proxy_pass http://127.0.0.1:{{ http_port }};
+
+    proxy_set_header  X-Real-IP       $remote_addr;
+    proxy_set_header  Host            $host;
+    proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header  X-Forwarded-Proto $scheme;
+    proxy_set_header  X-NgninX-Proxy  true;
+    proxy_redirect    off;
+
+    # Web socket support
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    proxy_read_timeout 86400s;
+    proxy_send_timeout 86400s;
+
+    # optimize downloading files larger than 1G (adjust if needed)
+    #proxy_max_temp_file_size 2G;
+  }
+
+  location {{ base_path }}/ {
+    #alias /opt/{{ username }}/{{ target_dir }}/www;
+    try_files $uri $uri/ /index.html =404;
+  }
+}

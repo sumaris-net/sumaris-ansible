@@ -1,0 +1,48 @@
+
+- name: Configure ssh port
+  include_tasks: set_ssh_port.yml
+
+# Gather facts should be set to false when running this role since it will
+# fail if the Ansible SSH port is not set correctly.
+# We run setup to gather facts here once the SSH port is set up.
+- name: Run deferred setup to gather facts
+  setup:
+
+- name: Set hostname
+  hostname: 
+    name: "{{ inventory_hostname }}"
+    
+- name: Set hosts file
+  lineinfile:
+    dest: "/etc/hosts"
+    line: "127.0.0.1 {{ inventory_hostname }}"
+    state: present
+
+- name: Set resolv.conf file
+  lineinfile:
+    dest: "/etc/resolv.conf"
+    line: "nameserver {{ item }}"
+    state: present
+  with_items: "{{ nameservers }}"
+  when: nameservers is defined
+
+- name: Configure /etc files
+  include_tasks: etc.yml    
+
+- name: Download and configure packages on CentOS
+  include_tasks: centos_packages.yml    
+  when: os_release_centos.changed
+
+- name: Download and configure packages on debian
+  include_tasks: debian_packages.yml    
+  when: os_release_debian.changed
+
+- name: Configure jail
+  include_tasks: jail.yml
+
+- name: Configure iptables
+  include_tasks: iptables.yml
+
+- name: Configure admins
+  include_tasks: admins.yml
+  loop: "{{ admins | dict2items }}"

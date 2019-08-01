@@ -1,0 +1,5 @@
+admin_email: contact@e-is.pro
+nginx_default_server: False
+
+# Add nginx repo
+nginx_repo_add: True

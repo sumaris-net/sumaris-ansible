@@ -1,0 +1,13 @@
+
+- name: Pod {{ username }} - Requirements
+  include_tasks: requirements.yml
+
+- name: Pod {{ username }} - Configure Database
+  include_tasks: db_hsqldb.yml
+  when: db_type == 'hsqldb'
+
+- name: Pod {{ username }} - Configure Pod
+  include_tasks: pod.yml
+
+- name: Pod {{ username }} - Configure App web site
+  include_tasks: app.yml

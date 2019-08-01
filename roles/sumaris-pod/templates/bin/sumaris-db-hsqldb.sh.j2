@@ -1,0 +1,103 @@
+#!/bin/bash
+
+SERVICE_NAME=sumaris-db-{{ username }}
+
+if [ "${SUMARIS_HOME}_" == "_" ]; then
+  SUMARIS_HOME="/opt/{{ username }}/{{ target_dir }}"
+fi
+if [ "${SUMARIS_LOG}_" == "_" ]; then
+  SUMARIS_LOG="/var/log/{{ username }}/sumaris-db.log"
+fi
+if [ "${DATA_DIRECTORY}_" == "_" ]; then
+  DATA_DIRECTORY="${SUMARIS_HOME}/data"
+fi
+
+PID_FILE="${DATA_DIRECTORY}/${SERVICE_NAME}.pid"
+JAR_FILE="${SUMARIS_HOME}/lib/hsqldb-{{ db_hsqldb_version }}.jar"
+DB_DIRECTORY=${DATA_DIRECTORY}/db
+DB_PATH=${DB_DIRECTORY}/sumaris
+
+# Make sure jar exists
+if [ ! -f $JAR_FILE ]; then
+    echo "Missing Hsqldb JAR file: $JAR_FILE"
+    exit 1
+fi;
+
+JAVA_OPTS="{{ db_jvm_opts }}"
+JAVA_OPTS="$JAVA_OPTS -Duser.timezone=UTC"
+SERVER_ARGS="--database.0 file:${DB_PATH} --dbname.0 {{ db_name }} --port {{ db_port }}"
+JAVA_CMD="java -server $JAVA_OPTS -classpath $JAR_FILE org.hsqldb.Server $SERVER_ARGS"
+
+start() {
+  echo "Starting $SERVICE_NAME..."
+  echo " - SERVER_ARGS: $SERVER_ARGS"
+  echo " - log: $SUMARIS_LOG"
+  PID=`nohup $JAVA_CMD >> $SUMARIS_LOG 2>> $SUMARIS_LOG & echo $!`
+}
+
+case "$1" in
+start)
+    if [ -f $PID_FILE ]; then
+        PID=`cat $PID_FILE`
+        if [ -z "`ps axf | grep ${PID} | grep -v grep`" ]; then
+            start
+        else
+            echo "Already running [$PID]"
+            exit 0
+        fi
+    else
+        start
+    fi
+
+    if [ -z $PID ]; then
+        echo "Failed starting"
+        exit 1
+    else
+        echo $PID > $PID_FILE
+        echo "Started [$PID]"
+        exit 0
+    fi
+;;
+status)
+    if [ -f $PID_FILE ]; then
+        PID=`cat $PID_FILE`
+        if [ -z "`ps axf | grep ${PID} | grep -v grep`" ]; then
+            echo "Not running (process dead but PID file exists)"
+            exit 1
+        else
+            echo "Running [$PID]"
+            exit 0
+        fi
+    else
+        echo "Not running"
+        exit 0
+    fi
+;;
+stop)
+    if [ -f $PID_FILE ]; then
+        PID=`cat $PID_FILE`
+        if [ -z "`ps axf | grep ${PID} | grep -v grep`" ]; then
+            echo "Not running (process dead but PID file exists)"
+            rm -f $PID_FILE
+            exit 1
+        else
+            PID=`cat $PID_FILE`
+            kill -term $PID
+            echo "Stopped [$PID]"
+            rm -f $PID_FILE
+            exit 0
+        fi
+    else
+        echo "Not running (PID not found)"
+        exit 0
+    fi
+;;
+restart)
+    $0 stop
+    sleep 10s
+    $0 start
+;;
+*)
+    echo "Usage: $0 {status|start|stop|restart}"
+    exit 0
+esac

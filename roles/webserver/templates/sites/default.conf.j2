@@ -1,0 +1,27 @@
+#
+# Default Nginx config
+# ref: https://ssl-config.mozilla.org/#server=nginx&server-version=1.10.3&openssl-version=1.0.2g&hsts=true&config=intermediate
+#
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    include includes/letsencrypt.conf;
+
+    # redirect all HTTP requests to HTTPS with a 301 Moved Permanently response.
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl default_server;
+    listen [::]:443 ssl default_server;
+
+    # Include base SSL conf
+    include includes/ssl.conf;
+
+    # Add specific SSL certs
+    ssl_certificate /etc/letsencrypt/live/{{ hostvars[inventory_hostname].default_domain }}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{ hostvars[inventory_hostname].default_domain }}/privkey.pem;
+    ssl_trusted_certificate /etc/letsencrypt/live/{{ hostvars[inventory_hostname].default_domain }}/fullchain.pem;
+
+}

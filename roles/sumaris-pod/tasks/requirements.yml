@@ -1,0 +1,49 @@
+- name: Pod {{ username }} - Update repositories cache and install required packages
+  apt:
+    cache_valid_time: 3600
+    pkg: ["openjdk-8-jre", "libsodium18", "unzip"]
+    update_cache: yes
+    state: present
+
+- name: Pod {{ username }} - Create {{ username}} user
+  user:
+    name: "{{ username }}"
+    shell: '/bin/bash'
+    create_home: yes
+    home: '/opt/{{ username }}'
+
+- name: Pod {{ username }} - Creates directory /opt/{{ username }}
+  file:
+    path: /opt/{{ username }}
+    state: directory
+    owner: "{{ username }}"
+    group: "{{ username }}"
+
+- name: Pod {{ username }} - Creates directories in /opt/{{ username }}
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: 0775
+  with_items:
+    - /opt/{{ username }}/{{ target_dir }}
+    - /opt/{{ username }}/{{ target_dir }}/bin
+    - /opt/{{ username }}/{{ target_dir }}/config
+    - /opt/{{ username }}/{{ target_dir }}/lib
+    - /opt/{{ username }}/{{ target_dir }}/data
+    - /var/log/{{ username }}
+
+- name: Pod {{ username }} - Creates backup directory /opt/{{ username }}/{{ target_dir }}/data/db-backup
+  file:
+    path: /opt/{{ username }}/{{ target_dir }}/data/db-backup
+    state: directory
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: 0777
+
+- name: Pod {{ username }} - Creates directory /usr/lib/systemd/system
+  file:
+    path: /usr/lib/systemd/system
+    state: directory
+    owner: root

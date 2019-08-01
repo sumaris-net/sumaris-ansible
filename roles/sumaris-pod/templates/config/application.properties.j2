@@ -1,0 +1,60 @@
+
+# Define timezone
+user.timezone=UTC
+
+# Server
+server.port={{ http_port }}
+server.address=127.0.0.1
+server.url=https://{{ sumaris_host }}{{ base_path }}
+
+# Disable Hibernate validation
+spring.jpa.hibernate.ddl-auto=none
+spring.liquibase.enabled=true
+
+# Common properties
+sumaris.name={{ app_name }}
+sumaris.basedir=/opt/{{ username }}/{{ target_dir }}
+sumaris.data.directory=/opt/{{ username }}/data
+sumaris.log.file=/var/log/{{ username }}/sumaris-pod.log
+sumaris.admin.email={{ admin_email }}
+sumaris.mail.from={{ admin_email }}
+
+# Crypto keypair
+sumaris.server.keypair.salt={{ pod_salt }}
+sumaris.server.keypair.password={{ pod_password }}
+
+# Useful URL
+sumaris.server.account.register.confirm.url=${server.url}/confirm/{email}/{code}
+
+# SMTP server
+spring.mail.enable=true
+spring.mail.host={{ spring.mail.host }}
+spring.mail.port={{ spring.mail.port }}
+spring.mail.username={{ spring.mail.username }}
+spring.mail.password={{ spring.mail.password }}
+spring.mail.properties.mail.smtp.auth={{ spring.mail.properties.mail.smtp.auth }}
+spring.mail.properties.mail.smtp.starttls.enable={{ spring.mail.properties.mail.smtp.starttls.enable }} 
+spring.mail.properties.mail.smtp.starttls.required={{ spring.mail.properties.mail.smtp.starttls.required }}
+
+# Logging Levels
+logging.level.ROOT=info
+logging.level.net.sumaris=info
+# Log event from changes publisher service
+logging.level.net.sumaris.server.service.technical.ChangesPublisherServiceImpl=debug
+logging.level.org.springframework=warn
+logging.level.org.nuiton=error
+logging.level.net.sf.ehcache=warn
+logging.level.org.apache.commons=warn
+logging.level.org.apache.catalina=warn
+logging.level.org.apache.coyote=warn
+logging.level.org.hibernate=error
+#logging.level.org.hibernate.SQL=debug
+logging.level.org.jboss.logging=warn
+logging.level.hsqldb.db=warn
+logging.level.liquibase=warn
+logging.level.liquibase-hibernate=warn
+logging.level.com.zaxxer.hikari=warn
+logging.level.graphql=info
+logging.level.io.leangen=error
+logging.level.com.fasterxml.jackson=warn
+logging.level.it.ozimov.springboot.mail=warn

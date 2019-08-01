@@ -1,0 +1,25 @@
+ 
+
+- name: gather facts from  managing hosts
+  setup:
+  delegate_to: "{{ item }}"
+  delegate_facts: True
+  
+- name: Authorize ansible port (ipv4)
+  iptables:
+    ip_version: ipv4
+    chain: INPUT
+    protocol: tcp
+    destination_port: "{{ ansible_port }}"
+    source: '{{ hostvars[item]["ansible_default_ipv4"]["address"] }}'
+    jump: ACCEPT
+
+- name: Authorize ansible port (ipv6)
+  iptables:
+    ip_version: ipv6
+    chain: INPUT
+    protocol: tcp
+    destination_port: "{{ ansible_port }}"
+    source: '{{ hostvars[item]["ansible_default_ipv6"]["address"] }}'
+    jump: ACCEPT
+  when: 'hostvars[item]["ansible_default_ipv6"]'

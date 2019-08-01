@@ -1,0 +1,12 @@
+# HSQLDB configuration
+spring.datasource.driver-class-name=org.hsqldb.jdbc.JDBCDriver
+spring.datasource.hikari.connectionTestQuery=SELECT 1 FROM STATUS WHERE ID=1
+spring.datasource.hikari.initializationFailTimeout=-1
+spring.jpa.database-platform=org.hibernate.dialect.HSQLDialect
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.HSQLDialect
+
+# Database connection
+spring.datasource.username=sa
+spring.datasource.password=
+sumaris.persistence.jdbc.url=jdbc:hsqldb:hsql://127.0.0.1:{{ db_port }}/{{ db_name }}
+spring.datasource.url=jdbc:hsqldb:hsql://127.0.0.1:{{ db_port }}/{{ db_name }}

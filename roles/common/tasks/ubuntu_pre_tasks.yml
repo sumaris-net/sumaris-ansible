@@ -1,0 +1,4 @@
+- name: Disable UFW
+  command: ufw disable
+  register: ufw_disabled
+  changed_when: false

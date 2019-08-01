@@ -1,0 +1,26 @@
+
+- name: Create user (debian)
+  user:
+    name: "{{ item.key }}"
+    state: present
+    shell: /bin/bash
+    groups: sudo
+  when: os_release_debian.changed
+  
+- name: Create user (centos)
+  user:
+    name: "{{ item.key }}"
+    state: present
+    shell: /bin/bash
+    groups: wheel
+  when: os_release_centos.changed
+
+- name: Set authorized keys
+  authorized_key:
+    user: "{{ item.key }}"
+    state: present
+    key: "{{ ssh_key_item }}"
+    exclusive: yes
+  loop: "{{ item.value.ssh_keys }}"
+  loop_control:
+    loop_var: ssh_key_item

@@ -1,0 +1,106 @@
+#!/bin/bash
+
+SERVICE_NAME=sumaris-pod-{{ username }}
+
+if [ "${SUMARIS_HOME}_" == "_" ]; then
+  SUMARIS_HOME="/opt/{{ username }}/{{ target_dir }}"
+fi
+if [ "${SUMARIS_LOG}_" == "_" ]; then
+  SUMARIS_LOG="/var/log/{{ username }}/sumaris-pod.log"
+fi
+if [ "${DATA_DIRECTORY}_" == "_" ]; then
+  DATA_DIRECTORY="${SUMARIS_HOME}/data"
+fi
+
+PID_FILE="${DATA_DIRECTORY}/${SERVICE_NAME}.pid"
+JAR_FILE="${SUMARIS_HOME}/lib/sumaris-pod-{{ pod_version }}.jar"
+
+JAVA_OPTS="{{ pod_jvm_opts }}"
+JAVA_OPTS="$JAVA_OPTS -Duser.timezone=UTC"
+JAVA_OPTS="$JAVA_OPTS -Dserver.address=127.0.0.1"
+JAVA_OPTS="$JAVA_OPTS -Dserver.port={{ http_port }}"
+JAVA_OPTS="$JAVA_OPTS -Dserver.url=https://{{ sumaris_host }}{{ base_path }}"
+JAVA_OPTS="$JAVA_OPTS -Dsumaris.server.account.register.confirm.url=https://{{ sumaris_host }}{{ base_path }}/confirm/{email}/{code}"
+JAVA_OPTS="$JAVA_OPTS -Dsumaris.name={{ app_name }}"
+JAVA_OPTS="$JAVA_OPTS -Dsumaris.basedir=${SUMARIS_HOME}"
+#JAVA_OPTS="$JAVA_OPTS -Dsumaris.data.directory=${DATA_DIRECTORY}"
+JAVA_OPTS="$JAVA_OPTS -Dsumaris.log.file=${SUMARIS_LOG}"
+JAVA_OPTS="$JAVA_OPTS -Dspring.config.additional-location=/opt/{{ username }}/{{ target_dir }}/config/"
+JAVA_OPTS="$JAVA_OPTS -Dspring.profiles.active={{ username }},{{ db_type }}"
+JAVA_CMD="java -server $JAVA_OPTS -jar $JAR_FILE $SUMARIS_HOME"
+
+start() {
+  echo "Starting $SERVICE_NAME..."
+  echo " - JAVA_OPTS: $JAVA_OPTS"
+  echo " - log: $SUMARIS_LOG"
+
+  cd $SUMARIS_HOME
+  PID=`nohup $JAVA_CMD >> /dev/null 2>> /dev/null & echo $!`
+}
+
+case "$1" in
+start)
+    if [ -f $PID_FILE ]; then
+        PID=`cat $PID_FILE`
+        if [ -z "`ps axf | grep ${PID} | grep -v grep`" ]; then
+            start
+        else
+            echo "Already running [$PID]"
+            exit 0
+        fi
+    else
+        start
+    fi
+
+    if [ -z $PID ]; then
+        echo "Failed starting"
+        exit 1
+    else
+        echo $PID > $PID_FILE
+        echo "Started [$PID]"
+        exit 0
+    fi
+;;
+status)
+    if [ -f $PID_FILE ]; then
+        PID=`cat $PID_FILE`
+        if [ -z "`ps axf | grep ${PID} | grep -v grep`" ]; then
+            echo "Not running (process dead but PID file exists)"
+            exit 1
+        else
+            echo "Running [$PID]"
+            exit 0
+        fi
+    else
+        echo "Not running"
+        exit 0
+    fi
+;;
+stop)
+    if [ -f $PID_FILE ]; then
+        PID=`cat $PID_FILE`
+        if [ -z "`ps axf | grep ${PID} | grep -v grep`" ]; then
+            echo "Not running (process dead but PID file exists)"
+            rm -f $PID_FILE
+            exit 1
+        else
+            PID=`cat $PID_FILE`
+            kill -term $PID
+            echo "Stopped [$PID]"
+            rm -f $PID_FILE
+            exit 0
+        fi
+    else
+        echo "Not running (PID not found)"
+        exit 0
+    fi
+;;
+restart)
+    $0 stop
+    sleep 10s
+    $0 start
+;;
+*)
+    echo "Usage: $0 {status|start|stop|restart}"
+    exit 0
+esac

@@ -1,0 +1,8 @@
+[Unit]
+Description=Let's Encrypt {{ sumaris_host }} renewal
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash -c "/usr/bin/certbot certonly --config /etc/letsencrypt/configs/{{ sumaris_host }}.ini --agree-tos"
+ExecStartPost=/bin/systemctl reload nginx.service
+

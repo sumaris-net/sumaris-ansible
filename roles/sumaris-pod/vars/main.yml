@@ -1,0 +1,23 @@
+# Pod version
+pod_version: 0.15.0
+jar_file: 'https://github.com/sumaris-net/sumaris-pod/releases/download/v{{ pod_version }}/sumaris-pod-{{ pod_version }}.jar'
+jar_hash_file: sha256:a9f5e2dc30f903106201ae418e1dbf49fafa8e37339631564ac9f1fec2109ad5
+pod_jvm_opts: '-Xms512m -Xmx1024m'
+
+# DB version
+db_version: 0.15.0
+db_file: 'https://github.com/sumaris-net/sumaris-pod/releases/download/v{{ db_version }}/sumaris-db-{{ db_version }}.zip'
+db_hash_file: sha256:ca7e3749665ec92e8c53c72008456d86a8c0f517c369f3d65601cff9531ed9c0
+db_jvm_opts: '-Xms512m -Xmx1024m'
+db_hsqldb_version: 2.4.1
+db_hsqldb_file: 'http://www.hsqldb.org/repos/org/hsqldb/hsqldb/{{ db_hsqldb_version }}/hsqldb-{{ db_hsqldb_version }}.jar'
+db_hsqldb_hash_file: sha256:417294fff9d6b6a4f7ee522982ed2693cdda28d131da0d9e4f048a57d6e1cdb2.
+
+# App version
+app_version: 0.15.1
+app_file: 'https://github.com/sumaris-net/sumaris-app/releases/download/v{{ app_version }}/sumaris-app-v{{ app_version }}-web.zip'
+app_hash_file: sha256:c4207c237e2b88e10a354a36af258d1641a338118b1ebb36186e91f11e1201ce
+
+# Other vars
+admin_email: contact@e-is.pro
+target_dir: sumaris-pod

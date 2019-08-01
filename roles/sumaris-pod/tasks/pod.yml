@@ -1,0 +1,82 @@
+- name: Pod {{ username }} - Check if JAR version exists
+  file:
+    path: /opt/{{ username }}/{{ target_dir }}/lib/sumaris-pod-{{ pod_version }}.jar
+    state: absent
+  check_mode: yes
+  register: sumaris_jar_exists
+
+- name:  Pod {{ username }} - JAR version not exists
+  debug:
+    msg: "Pod already installed. Skipping installation"
+  when: sumaris_jar_exists.changed
+
+- name: Pod {{ username }} - Download JAR {{ pod_version }}
+  get_url:
+    url: "{{ jar_file }}"
+    dest: /opt/{{ username }}/{{ target_dir }}/lib/sumaris-pod-{{ pod_version }}.jar
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: 0755
+    checksum: "{{ jar_hash_file }}"
+  when: not sumaris_jar_exists.changed
+  register: sumaris_jar_updated
+
+- name: Pod {{ username }} - Configure config/application-{{ username }}.properties
+  template:
+    src: templates/config/application.properties.j2
+    dest: /opt/{{ username }}/{{ target_dir }}/config/application-{{ username }}.properties
+    owner: "{{ username }}"
+    group: "{{ username }}"
+  register: sumaris_pod_config
+
+- name: Pod {{ username }} - Configure config/application-{{ db_type }}.properties
+  template:
+    src: templates/config/application-{{ db_type }}.properties.j2
+    dest: /opt/{{ username }}/{{ target_dir }}/config/application-{{ db_type }}.properties
+    owner: "{{ username }}"
+    group: "{{ username }}"
+  register: sumaris_pod_config_db
+
+- name: Pod {{ username }} - Configure script bin/sumaris-pod.sh
+  template:
+    src: templates/bin/sumaris-pod.sh.j2
+    dest: /opt/{{ username }}/{{target_dir}}/bin/sumaris-pod.sh
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: 0755
+  register: sumaris_pod_script
+
+- name: Pod {{ username }} - Configure sumaris-pod-{{ username }} systemd service
+  template:
+    src: templates/systemd/sumaris-pod.service.j2
+    dest: /usr/lib/systemd/system/sumaris-pod-{{ username }}.service
+    owner: root
+    mode: 0644
+  register: sumaris_pod_service
+
+- name: Pod {{ username }} - Daemon reload sumaris-pod-{{ username }}
+  systemd:
+    enabled: yes
+    daemon_reload: yes
+    name: sumaris-pod-{{ username }}.service
+  when: sumaris_pod_service.changed
+
+- name: Pod {{ username }} - Restart sumaris-pod-{{ username }}
+  systemd:
+    name: sumaris-pod-{{ username }}
+    state: restarted
+  when: (sumaris_jar_updated.changed or sumaris_pod_config.changed or sumaris_pod_config_db.changed or sumaris_pod_service.changed or sumaris_pod_script.changed)
+
+- name: Pod {{ username }} - Clean up unused files
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    ## Old and unused files
+    - /opt/{{ username }}/{{target_dir}}/start-pod.sh
+    - /opt/{{ username }}/{{target_dir}}/pod.sh
+    - /opt/{{ username }}/{{target_dir}}/sumaris-pod.sh
+    - /opt/{{ username }}/{{target_dir}}/sumaris-pod.jar
+    - /opt/{{ username }}/{{target_dir}}/application.properties
+    - /opt/{{ username }}/{{target_dir}}/config/application.properties
+  ignore_errors: True

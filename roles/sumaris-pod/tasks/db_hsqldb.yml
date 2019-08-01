@@ -1,0 +1,118 @@
+
+- name: DB {{ username }} - Check if DB exists
+  file:
+    path: /opt/{{ username }}/{{ target_dir }}/data/db
+    state: directory
+  check_mode: yes
+  register: sumaris_db_missing
+
+- name: DB {{ username }} - Creates directory /opt/{{ username }}/{{ target_dir }}/data/db
+  file:
+    path: /opt/{{ username }}/{{ target_dir }}/data/db
+    state: directory
+    owner: "{{ username }}"
+    group: "{{ username }}"
+  when: sumaris_db_missing.changed
+
+- name: DB {{ username }} - Check if DB need update
+  copy:
+    content: "{{ db_version }}"
+    dest: /opt/{{ username }}/{{ target_dir }}/data/db/version.appup
+  check_mode: yes
+  when: (not sumaris_db_missing.changed and db_reset)
+  register: sumaris_db_version
+
+- name: DB {{ username }} - DB already installed
+  debug:
+    msg: "DB already installed. Skipping installation"
+  when: (not sumaris_db_missing.changed and not sumaris_db_version.changed)
+
+- name: DB {{ username }} - Download DB file
+  get_url:
+    url: "{{ db_file }}"
+    dest: /tmp/sumaris-db-{{ db_version }}.zip
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: 0755
+    checksum: "{{ db_hash_file }}"
+  when: (sumaris_db_missing.changed or sumaris_db_version.changed)
+
+- name: DB {{ username }} - Stop sumaris-db-{{ username }} service
+  systemd:
+    name: sumaris-db-{{ username }}
+    state: stop
+  when: sumaris_db_version.changed
+
+- name: DB {{ username }} - Extract DB
+  unarchive:
+    src: /tmp/sumaris-db-{{ db_version }}.zip
+    dest: /opt/{{ username }}/{{ target_dir }}/data
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    remote_src: yes
+  when: (sumaris_db_missing.changed or sumaris_db_version.changed)
+
+- name: DB {{ username }} - Create DB version file
+  copy:
+    content: "{{ db_version }}"
+    dest: /opt/{{ username }}/{{ target_dir }}/data/db/version.appup
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: 0644
+  when: (sumaris_db_missing.changed or sumaris_db_version.changed)
+
+- name: DB {{ username }} - DB on writable
+  lineinfile:
+    dest: "/opt/{{ username }}/{{ target_dir }}/data/db/sumaris.properties"
+    line: "readonly=true"
+    state: absent
+
+- name: DB {{ username }} - Creates /opt/{{ username }}/{{ target_dir }}/bin/sumaris-db-hsqldb.sh
+  template:
+    src: templates/bin/sumaris-db-hsqldb.sh.j2
+    dest: /opt/{{ username }}/{{target_dir}}/bin/sumaris-db-hsqldb.sh
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: 0755
+  notify: Restart sumaris-db-{{ username }}
+
+- name: DB {{ username }} - Download HSQLDB JAR
+  get_url:
+    url: "{{ db_hsqldb_file }}"
+    dest: /opt/{{ username }}/{{target_dir}}/lib/hsqldb-{{ db_hsqldb_version }}.jar
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: 0644
+    checksum: "{{ db_hsqldb_hash_file }}"
+  when: (sumaris_db_missing.changed or sumaris_db_version.changed)
+
+- name: DB {{ username }} - Configure sumaris-db systemd service
+  template:
+    src: templates/systemd/sumaris-db-hsqldb.service.j2
+    dest: /usr/lib/systemd/system/sumaris-db-{{ username }}.service
+    owner: root
+    mode: 0644
+  when: (sumaris_db_missing.changed or sumaris_db_version.changed)
+  notify: Restart sumaris-db-{{ username }}
+
+- name: DB {{ username }} - Daemon reload sumaris-db
+  systemd:
+    enabled: yes
+    daemon_reload: yes
+    name: sumaris-db-{{ username }}.service
+    force: yes
+  when: (sumaris_db_missing.changed or sumaris_db_version.changed)
+
+- name: DB {{ username }} - Clean up OLD unused files
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - /tmp/sumaris-db-{{ db_version }}.zip
+    ## Clean up previous release files
+    - /opt/{{ username }}/{{target_dir}}/start-hsqldb.sh
+    - /opt/{{ username }}/{{target_dir}}/db-hsqldb.sh
+    - /opt/{{ username }}/{{target_dir}}/hsqldb-2.4.1.jar
+    - /opt/{{ username }}/{{target_dir}}/config/application.properties
+  ignore_errors: True
+  when: (sumaris_db_missing.changed or sumaris_db_version.changed)

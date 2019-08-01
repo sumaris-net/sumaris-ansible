@@ -1,0 +1,10 @@
+- name: Restart nginx
+  systemd:
+    name: nginx
+    state: restarted
+
+- name: Nginx HTTP
+  template:
+    src: sites/init.conf.j2
+    dest: /etc/nginx/conf.d/default.conf
+  notify: Restart nginx

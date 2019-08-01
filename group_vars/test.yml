@@ -1,0 +1,4 @@
+#app_version: 0.15.0
+#pod_version: 0.14.5
+#db_version: 0.14.4
+db_reset: True

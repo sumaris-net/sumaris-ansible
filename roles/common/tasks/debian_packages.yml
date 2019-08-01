@@ -1,0 +1,5 @@
+
+- name: Install fail2ban and iptables
+  apt: 
+    pkg: [fail2ban,  iptables-persistent]
+    state: latest

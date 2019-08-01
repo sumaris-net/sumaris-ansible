@@ -1,0 +1,22 @@
+- name: Restart nginx
+  systemd:
+    name: nginx
+    state: restarted
+
+- name: Nginx HTTP
+  template:
+    src: sites/init.conf.j2
+    dest: /etc/nginx/conf.d/sumaris-{{ username }}.conf
+  notify: Restart nginx
+
+- name: Restart sumaris-pod-{{ username }}
+  systemd:
+    name: sumaris-pod-{{ username }}
+    state: restarted
+  notify: Restart nginx
+
+- name: Restart sumaris-db-{{ username }}
+  systemd:
+    name: sumaris-db-{{ username }}
+    state: restarted
+#notify: Restart sumaris-pod-{{ username }}

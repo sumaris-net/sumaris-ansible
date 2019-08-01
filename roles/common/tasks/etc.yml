@@ -1,0 +1,33 @@
+
+- name: Creates directory /etc/iptables
+  file: 
+    path: /etc/iptables
+    state: directory
+
+- name: Ensure /etc/iptables/rules.v4 exists on CentOS
+  file:
+    path: /etc/iptables/rules.v4
+    state: touch
+  when: os_release_centos.changed
+
+- name: Ensure /etc/iptables/rules.v6 exists on CentOS
+  file:
+    path: /etc/iptables/rules.v6
+    state: touch
+  when: os_release_centos.changed
+
+- name: Set iptables path on CentOS
+  file:
+    src: /etc/iptables/rules.v4
+    dest: /etc/sysconfig/iptables
+    state: link
+    force: yes
+  when: os_release_centos.changed
+
+- name: Set ip6tables path on CentOS
+  file:
+    src: /etc/iptables/rules.v6
+    dest: /etc/sysconfig/ip6tables
+    state: link
+    force: yes
+  when: os_release_centos.changed

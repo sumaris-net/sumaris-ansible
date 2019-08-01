@@ -1,0 +1,16 @@
+
+- name: Authorize ansible port (ipv4)
+  iptables:
+    ip_version: ipv4
+    chain: INPUT
+    protocol: tcp
+    destination_port: "{{ ansible_port }}"
+    jump: ACCEPT
+
+- name: Authorize ansible port (ipv6)
+  iptables:
+    ip_version: ipv6
+    chain: INPUT
+    protocol: tcp
+    destination_port: "{{ ansible_port }}"
+    jump: ACCEPT
