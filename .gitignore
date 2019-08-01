@@ -1,7 +1,7 @@
 /.idea
 /.local
 /host_vars/*
-ssh.cfg
-hosts.yml
-testing.yml
-production.yml
+/ssh.cfg
+/hosts.yml
+/testing.yml
+/production.yml
