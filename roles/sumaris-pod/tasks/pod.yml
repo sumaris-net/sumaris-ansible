@@ -79,4 +79,5 @@
     - /opt/{{ username }}/{{target_dir}}/sumaris-pod.jar
     - /opt/{{ username }}/{{target_dir}}/application.properties
     - /opt/{{ username }}/{{target_dir}}/config/application.properties
+    - /usr/lib/systemd/system/sumaris-pod-{{ username }}.service
   ignore_errors: True

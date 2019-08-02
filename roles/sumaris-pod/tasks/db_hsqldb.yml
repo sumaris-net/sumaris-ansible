@@ -160,6 +160,7 @@
     - /opt/{{ username }}/{{target_dir}}/db-hsqldb.sh
     - /opt/{{ username }}/{{target_dir}}/hsqldb-2.4.1.jar
     - /opt/{{ username }}/{{target_dir}}/config/application.properties
+    - /usr/lib/systemd/system/sumaris-db-{{ username }}.service
   ignore_errors: True
   when: (sumaris_db_missing.changed or sumaris_db_version.changed)
 
