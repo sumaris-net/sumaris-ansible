@@ -53,7 +53,7 @@
 
 - name: Creates directory /etc/iptables
   file:
-    path:  /etc/iptables/rules.v4
+    path:  /etc/iptables
     state: directory
 
 - name: Save the rules ipv4
