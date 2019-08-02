@@ -46,7 +46,7 @@ exit
 
 ```bash
 sed -i s/PermitRootLogin .*/PermitRootLogin no/g /etc/ssh/sshd_config
-service ssh restart
+service sshd restart
 ```
 
 ## Add your node to ansible conf

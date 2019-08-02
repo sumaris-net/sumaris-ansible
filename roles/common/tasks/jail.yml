@@ -16,4 +16,4 @@
   systemd:
     name: fail2ban
     state: restarted
-  when: os_release_centos.changed
+  when: ansible_distribution == "CentOS"

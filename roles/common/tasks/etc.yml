@@ -8,13 +8,13 @@
   file:
     path: /etc/iptables/rules.v4
     state: touch
-  when: os_release_centos.changed
+  when: ansible_distribution == "CentOS"
 
 - name: Ensure /etc/iptables/rules.v6 exists on CentOS
   file:
     path: /etc/iptables/rules.v6
     state: touch
-  when: os_release_centos.changed
+  when: ansible_distribution == "CentOS"
 
 - name: Set iptables path on CentOS
   file:
@@ -22,7 +22,7 @@
     dest: /etc/sysconfig/iptables
     state: link
     force: yes
-  when: os_release_centos.changed
+  when: ansible_distribution == "CentOS"
 
 - name: Set ip6tables path on CentOS
   file:
@@ -30,4 +30,4 @@
     dest: /etc/sysconfig/ip6tables
     state: link
     force: yes
-  when: os_release_centos.changed
+  when: ansible_distribution == "CentOS"

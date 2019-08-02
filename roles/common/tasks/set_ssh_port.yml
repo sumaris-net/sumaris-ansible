@@ -15,7 +15,7 @@
     connect_timeout: "5"
     timeout: "10"
   delegate_to: "{{ managing_hosts[0] }}"
-  ignore_errors: "yes"
+  ignore_errors: True
   register: default_ssh
 
 
@@ -38,7 +38,7 @@
     connect_timeout: "5"
     timeout: "10"
   delegate_to: "{{ managing_hosts[0] }}"
-  ignore_errors: "yes"
+  ignore_errors: True
   register: configured_ssh
   when: default_ssh is failed
 
@@ -59,45 +59,13 @@
 - name: Confirm host connection works
   ping:
 
-- name: "Check if OS is debian"
-  lineinfile:
-    name: /etc/os-release
-    line: "ID=debian"
-    state: absent
-  check_mode: yes
-  register: os_release_debian
-
-- name: "Check if OS is CentOS"
-  lineinfile:
-    name: /etc/os-release
-    line: 'ID="centos"'
-    state: absent
-  check_mode: yes
-  register: os_release_centos
-
-- name: "Check if OS is ubuntu (1/2)"
-  lineinfile:
-    name: /etc/os-release
-    line: "ID=ubuntu"
-    state: absent
-  check_mode: yes
-  register: os_release_ubuntu
-
-- name: "Check if OS is Ubuntu (2/2)"
-  lineinfile:
-    name: /etc/os-release
-    line: "ID=ubuntu"
-    state: absent
-  check_mode: yes
-  register: os_release_debian
-
 - name: Configure SELinux on CentOS
   include_tasks: centos_pre_tasks.yml    
-  when: os_release_centos.changed
+  when: ansible_distribution == "CentOS"
 
 - name: Configure UFW on Ubuntu
   include_tasks: ubuntu_pre_tasks.yml
-  when: os_release_ubuntu.changed
+  when: ansible_distribution == "Ubuntu"
 
 - name: Setup alternate SSH port
   lineinfile:
@@ -106,11 +74,11 @@
     line: "Port {{ configured_port }}"
   notify: Restart sshd
 
-- name: Disable root login with password
+- name: Disable root login
   lineinfile:
     dest: "/etc/ssh/sshd_config"
     regexp: "^PermitRootLogin"
-    line: "PermitRootLogin prohibit-password"
+    line: "PermitRootLogin no"
   notify: Restart sshd
 
 # We notified "Restart sshd" if we modified the sshd config.

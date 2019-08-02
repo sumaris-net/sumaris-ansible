@@ -31,11 +31,11 @@
 
 - name: Download and configure packages on CentOS
   include_tasks: centos_packages.yml    
-  when: os_release_centos.changed
+  when: ansible_distribution == "CentOS"
 
-- name: Download and configure packages on debian
+- name: Download and configure packages on Debian
   include_tasks: debian_packages.yml    
-  when: os_release_debian.changed
+  when: ansible_distribution == "Debian"
 
 - name: Configure jail
   include_tasks: jail.yml

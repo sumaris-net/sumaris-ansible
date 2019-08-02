@@ -28,7 +28,7 @@ ssh-keygen -f ~/.ssh/id_ed25519 -t ed25519
 
  - Send the publick key to remote servers: 
 ```bash
-ssh-copy-id -i ~/.ssh/ansible-ed25519.pub username@server_host
+ssh-copy-id -i ~/.ssh/id_ed25519.pub username@server_host
 ```
  - Check every thing works:
 ```bash

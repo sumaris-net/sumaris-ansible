@@ -5,7 +5,7 @@
     state: present
     shell: /bin/bash
     groups: sudo
-  when: os_release_debian.changed
+  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
   
 - name: Create user (centos)
   user:
@@ -13,7 +13,7 @@
     state: present
     shell: /bin/bash
     groups: wheel
-  when: os_release_centos.changed
+  when: ansible_distribution == "CentOS"
 
 - name: Set authorized keys
   authorized_key:
