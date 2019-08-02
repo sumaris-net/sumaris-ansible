@@ -1,7 +1,7 @@
 - name: Pod {{ username }} - Update repositories cache and install required packages
   apt:
     cache_valid_time: 3600
-    pkg: ["openjdk-8-jre", "libsodium18", "unzip"]
+    pkg: ["openjdk-8-jre", "libsodium18", "unzip", "lftp"]
     update_cache: yes
     state: present
 
@@ -42,8 +42,8 @@
     group: "{{ username }}"
     mode: 0777
 
-- name: Pod {{ username }} - Creates directory /usr/lib/systemd/system
+- name: Pod {{ username }} - Creates directory /etc/systemd/system
   file:
-    path: /usr/lib/systemd/system
+    path: /etc/systemd/system
     state: directory
     owner: root

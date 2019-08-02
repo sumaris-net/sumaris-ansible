@@ -28,11 +28,53 @@ JAVA_OPTS="$JAVA_OPTS -Duser.timezone=UTC"
 SERVER_ARGS="--database.0 file:${DB_PATH} --dbname.0 {{ db_name }} --port {{ db_port }}"
 JAVA_CMD="java -server $JAVA_OPTS -classpath $JAR_FILE org.hsqldb.Server $SERVER_ARGS"
 
+
 start() {
   echo "Starting $SERVICE_NAME..."
-  echo " - SERVER_ARGS: $SERVER_ARGS"
-  echo " - log: $SUMARIS_LOG"
+  echo " - args: $SERVER_ARGS"
+  echo " - log:  $SUMARIS_LOG"
   PID=`nohup $JAVA_CMD >> $SUMARIS_LOG 2>> $SUMARIS_LOG & echo $!`
+}
+
+backup() {
+  TOOL_JAR_FILE="${SUMARIS_HOME}/lib/sqltool-{{ db_hsqldb_version }}.jar"
+  BACKUP_DIR=${DATA_DIRECTORY}/db-backup/  # WARN: with trailing slash
+  BACKUP_LOG="/var/log/{{ username }}/sumaris-db-backup.log"
+  FTP_URL={{ db_backup_ftp_url }}
+  FTP_REMOTE_DIR={{ db_backup_ftp_dir }}
+
+  echo "Starting backup of $SERVICE_NAME..."
+  echo "Starting backup of $SERVICE_NAME..." > $BACKUP_LOG
+  echo " - dir: $BACKUP_DIR"
+  echo " - log: $BACKUP_LOG"
+  if [ "_${FTP_URL}" != "_" ]; then
+    echo " - FTP dir: $FTP_REMOTE_DIR"
+  else
+    echo " - FTP: /!\ no URL configured!"
+  fi
+
+  # Backup to file
+  java -classpath $JAR_FILE:$TOOL_JAR_FILE org.hsqldb.cmdline.SqlTool --rcFile=$SUMARIS_HOME/bin/sqltool.rc --sql="BACKUP DATABASE TO '$BACKUP_DIR' NOT BLOCKING;" sumaris-{{ username }} >> $BACKUP_LOG 2>> $BACKUP_LOG
+  if [[ $? -ne 0 ]]; then
+    echo "ERROR while executing backup. See log: $BACKUP_LOG"
+    exit 1
+  fi
+  BACKUP_FILE=$(ls -1t $BACKUP_DIR | head -1)
+  echo "Created file: $BACKUP_FILE"
+
+  # FTP upload
+  if [[ "_${FTP_URL}" != "_" ]]; then
+    echo "Uploading file $BACKUP_FILE to FTP..."
+    echo "Uploading file $BACKUP_FILE to FTP..." > $BACKUP_LOG
+    lftp $FTP_URL -e "mirror -e -R $BACKUP_DIR $FTP_REMOTE_DIR ; quit" >> $BACKUP_LOG 2>> $BACKUP_LOG
+    if [[ $? -ne 0 ]]; then
+      echo "ERROR while uploading backup file to FTP. See log: $BACKUP_LOG"
+      exit 1
+    fi
+  fi
+
+  echo "DB backup succeed"
+  exit 0
 }
 
 case "$1" in
@@ -97,7 +139,22 @@ restart)
     sleep 10s
     $0 start
 ;;
+backup)
+    if [ -f $PID_FILE ]; then
+        PID=`cat $PID_FILE`
+        if [ -z "`ps axf | grep ${PID} | grep -v grep`" ]; then
+            echo "DB not running (process dead but PID file exists)"
+            rm -f $PID_FILE
+            exit 1
+        else
+            backup
+        fi
+    else
+        echo "DB not running (PID not found)"
+        exit 1
+    fi
+;;
 *)
-    echo "Usage: $0 {status|start|stop|restart}"
+    echo "Usage: $0 {start|stop|restart|status|backup}"
     exit 0
 esac

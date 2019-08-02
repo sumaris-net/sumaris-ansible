@@ -1,0 +1,10 @@
+[Unit]
+Description=Daily backup of sumaris-db-{{ username }}
+
+[Timer]
+OnCalendar=daily
+RandomizedDelaySec=1day
+Persistent=true
+
+[Install]
+WantedBy=timers.target%

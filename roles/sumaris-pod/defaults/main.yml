@@ -11,6 +11,9 @@ db_type: 'hsqldb'
 db_port: 9002
 db_name: 'sumaris-{{ username }}'
 db_reset: False
+db_backup_ftp_url: ''
+db_backup_ftp_dir: '/sumaris-db-{{ username }}-backup/'
+db_backup: True
 
 app_name: SUMARiS
 app_default_peer: True

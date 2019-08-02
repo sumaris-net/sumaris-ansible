@@ -40,7 +40,8 @@
 - name: DB {{ username }} - Stop sumaris-db-{{ username }} service
   systemd:
     name: sumaris-db-{{ username }}
-    state: stop
+    state: stopped
+  ignore_errors: True
   when: sumaris_db_version.changed
 
 - name: DB {{ username }} - Extract DB
@@ -76,6 +77,14 @@
     mode: 0755
   notify: Restart sumaris-db-{{ username }}
 
+- name: DB {{ username }} - Configure sqltool.rc file
+  template:
+    src: templates/bin/sqltool.rc.j2
+    dest: /opt/{{ username }}/{{target_dir}}/bin/sqltool.rc
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: 0644
+
 - name: DB {{ username }} - Download HSQLDB JAR
   get_url:
     url: "{{ db_hsqldb_file }}"
@@ -86,13 +95,25 @@
     checksum: "{{ db_hsqldb_hash_file }}"
   when: (sumaris_db_missing.changed or sumaris_db_version.changed)
 
+- name: DB {{ username }} - Download SQL Tool JAR
+  get_url:
+    url: "{{ db_hsqldb_tool_file }}"
+    dest: /opt/{{ username }}/{{target_dir}}/lib/sqltool-{{ db_hsqldb_version }}.jar
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: 0644
+    checksum: "{{ db_hsqldb_tool_hash_file }}"
+  when: (sumaris_db_missing.changed or sumaris_db_version.changed)
+
+  # -------- DB as systemd service -------- #
+
 - name: DB {{ username }} - Configure sumaris-db systemd service
   template:
     src: templates/systemd/sumaris-db-hsqldb.service.j2
-    dest: /usr/lib/systemd/system/sumaris-db-{{ username }}.service
+    dest: /etc/systemd/system/sumaris-db-{{ username }}.service
     owner: root
     mode: 0644
-  when: (sumaris_db_missing.changed or sumaris_db_version.changed)
+  #when: (sumaris_db_missing.changed or sumaris_db_version.changed)
   notify: Restart sumaris-db-{{ username }}
 
 - name: DB {{ username }} - Daemon reload sumaris-db
@@ -101,9 +122,38 @@
     daemon_reload: yes
     name: sumaris-db-{{ username }}.service
     force: yes
-  when: (sumaris_db_missing.changed or sumaris_db_version.changed)
+  #when: (sumaris_db_missing.changed or sumaris_db_version.changed)
 
-- name: DB {{ username }} - Clean up OLD unused files
+  # -------- DB backup as systemd timer -------- #
+
+- name: DB {{ username }} - Configure DB backup systemd service
+  template:
+    src: templates/systemd/sumaris-db-backup.service.j2
+    dest: /etc/systemd/system/sumaris-db-backup-{{ username }}.service
+    owner: root
+    mode: 0644
+  when: db_backup
+  register: sumaris_db_backup_service
+
+- name: DB {{ username }} - Configure DB backup systemd timer
+  template:
+    src: templates/systemd/sumaris-db-backup.timer.j2
+    dest: /etc/systemd/system/sumaris-db-backup-{{ username }}.timer
+    owner: root
+    mode: 0644
+  when: db_backup
+  register: sumaris_db_backup_timer
+
+- name: DB {{ username }} - Daemon reload DB backup systemd timer
+  systemd:
+    enabled: yes
+    daemon_reload: yes
+    name: sumaris-db-backup-{{ username }}.timer
+  when: (sumaris_db_backup_service.changed or sumaris_db_backup_timer.changed)
+
+  # -------- Last clean up -------- #
+
+- name: DB {{ username }} - Clean up OLD unused files (1/2)
   file:
     path: "{{ item }}"
     state: absent
@@ -116,3 +166,19 @@
     - /opt/{{ username }}/{{target_dir}}/config/application.properties
   ignore_errors: True
   when: (sumaris_db_missing.changed or sumaris_db_version.changed)
+
+- name: DB {{ username }} - Clean up OLD unused files (2/2)
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - /etc/systemd/system/sumaris-db-backup-{{ username }}.timer
+    - /etc/systemd/system/sumaris-db-backup-{{ username }}.service
+  ignore_errors: True
+  when: not db_backup
+  register: remove_db_backup_timer
+
+- name: Pod {{ username }} - Daemon remove DB backup systemd timer
+  systemd:
+    daemon_reload: yes
+  when: remove_db_backup_timer.changed

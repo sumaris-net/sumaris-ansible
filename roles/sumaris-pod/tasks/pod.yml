@@ -49,7 +49,7 @@
 - name: Pod {{ username }} - Configure sumaris-pod-{{ username }} systemd service
   template:
     src: templates/systemd/sumaris-pod.service.j2
-    dest: /usr/lib/systemd/system/sumaris-pod-{{ username }}.service
+    dest: /etc/systemd/system/sumaris-pod-{{ username }}.service
     owner: root
     mode: 0644
   register: sumaris_pod_service

@@ -119,20 +119,25 @@
     dest: /etc/nginx/conf.d/sumaris-{{ username }}.conf
   notify: Restart nginx
 
-#- name: App {{ username }} - Configure certbot systemd service
-#  template:
-#    src: templates/systemd/certbot.service.j2
-#    dest: /usr/lib/systemd/system/certbot-sumaris-pod-{{ username }}.service
-#    owner: root
-#    mode: 0644
-#
-#- name: App {{ username }} - Configure certbot systemd timer
-#  template:
-#    src: templates/systemd/certbot.timer.j2
-#    dest: /usr/lib/systemd/system/certbot-sumaris-pod-{{ username }}.timer
-#    owner: root
-#    mode: 0644
+- name: App {{ username }} - Configure certbot systemd service
+  template:
+    src: templates/systemd/certbot.service.j2
+    dest: /etc/systemd/system/certbot-sumaris-app-{{ username }}.service
+    owner: root
+    mode: 0644
 
+- name: App {{ username }} - Configure certbot systemd timer
+  template:
+    src: templates/systemd/certbot.timer.j2
+    dest: /etc/systemd/system/certbot-sumaris-app-{{ username }}.timer
+    owner: root
+    mode: 0644
+
+- name: Pod {{ username }} - Daemon reload certbot systemd timer
+  systemd:
+    enabled: yes
+    daemon_reload: yes
+    name: certbot-sumaris-app-{{ username }}.timer
 
 - name: App {{ username }} - Clean up
   file:
