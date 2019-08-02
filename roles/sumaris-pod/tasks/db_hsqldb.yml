@@ -93,7 +93,6 @@
     group: "{{ username }}"
     mode: 0644
     checksum: "{{ db_hsqldb_hash_file }}"
-  when: (sumaris_db_missing.changed or sumaris_db_version.changed)
 
 - name: DB {{ username }} - Download SQL Tool JAR
   get_url:
@@ -103,7 +102,6 @@
     group: "{{ username }}"
     mode: 0644
     checksum: "{{ db_hsqldb_tool_hash_file }}"
-  when: (sumaris_db_missing.changed or sumaris_db_version.changed)
 
   # -------- DB as systemd service -------- #
 
@@ -113,7 +111,6 @@
     dest: /etc/systemd/system/sumaris-db-{{ username }}.service
     owner: root
     mode: 0644
-  #when: (sumaris_db_missing.changed or sumaris_db_version.changed)
   notify: Restart sumaris-db-{{ username }}
 
 - name: DB {{ username }} - Daemon reload sumaris-db
@@ -122,7 +119,6 @@
     daemon_reload: yes
     name: sumaris-db-{{ username }}.service
     force: yes
-  #when: (sumaris_db_missing.changed or sumaris_db_version.changed)
 
   # -------- DB backup as systemd timer -------- #
 
