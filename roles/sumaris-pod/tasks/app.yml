@@ -50,6 +50,27 @@
   when: (sumaris_app_missing.changed or sumaris_app_version.changed)
   notify: Restart nginx
 
+# TODO: check this
+#- name: App {{ username }} - Set {{ sumaris_host }} as default peer
+#  shell: sed -i "s/defaultPeer:null,/defaultPeer:{host:'{{ sumaris_host }}',port:443}/g" /opt/{{ username }}/{{ target_dir }}/www/*.js
+#  when: app_default_peer #(sumaris_app_missing.changed or sumaris_app_version.changed)
+
+#- name: App {{ username }} - Set {{ sumaris_host }} as default peer
+#  shell: sed -i "s/defaultPeer:null,/defaultPeer:{host:'{{ sumaris_host }}',port:443}/g" /opt/{{ username }}/{{ target_dir }}/www/*.js
+#  when: app_default_peer #(sumaris_app_missing.changed or sumaris_app_version.changed)
+
+#- name: App {{ username }} - Add {{ sumaris_host }} into default peers
+#  shell: sed -i "s/defaultPeers:\[/defaultPeers:\[{host:'{{ sumaris_host }}',port:443},/g" /opt/{{ username }}/{{ target_dir }}/www/*.js
+#  when: not app_default_peer #(sumaris_app_missing.changed or sumaris_app_version.changed)
+
+- name: App {{ username }} - Set baseUrl {{ app_base_path }} in JS file
+  shell: sed -i 's;baseUrl:"[^"]*";baseUrl:"/{{ app_base_path }}";g' /opt/{{ username }}/{{ target_dir }}/www/*.js
+  when: (sumaris_app_missing.changed or sumaris_app_version.changed)
+
+- name: App {{ username }} - Set base href {{ app_base_path }} in index.html
+  shell: sed -i 's;<base href="[^"]*";<base href="/{{ app_base_path }}";g' /opt/{{ username }}/{{ target_dir }}/www/index.html
+  when: (sumaris_app_missing.changed or sumaris_app_version.changed)
+
 - name: App {{ username }} - Create App version file
   copy:
     content: "{{ app_version }}"
@@ -64,14 +85,28 @@
     path: /etc/letsencrypt/configs
     state: directory
     owner: root
-  register: sumaris_app_cert_config
+  register: letsencrypt_configs
 
 - name: App {{ username }} - Generate letsencrypt configuration
   template:
     src: letsencrypt/conf.ini.j2
     dest: /etc/letsencrypt/configs/{{ sumaris_host }}.ini
-  when: (sumaris_app_missing.changed or sumaris_app_version.changed or sumaris_app_cert_config.changed)
-  notify: Nginx HTTP
+  when: (sumaris_app_missing.changed or sumaris_app_version.changed or letsencrypt_configs.changed)
+  register: sumaris_app_cert_config
+
+- name: App {{ username }} - Check Nginx conf exists
+  file:
+    path: /etc/nginx/conf.d/sumaris-{{ username }}.conf
+    state: absent
+  check_mode: yes
+  register: nginx_config_exists
+
+- name: App {{ username }} - Add Nginx minimal config
+  template:
+    src: sites/init.conf.j2
+    dest: /etc/nginx/conf.d/sumaris-{{ username }}.conf
+  when: not nginx_config_exists.changed
+  notify: Restart nginx
 
 - name: App {{ username }} - Cert bot
   command: certbot -n --agree-tos --config /etc/letsencrypt/configs/{{ sumaris_host }}.ini certonly
@@ -98,8 +133,6 @@
 #    owner: root
 #    mode: 0644
 
-# TODO: change base URL ?
-# sed -i 's/baseUrl:"\/"/baseUrl:"\/cesium2\/"/g' ./cesium2/*.js
 
 - name: App {{ username }} - Clean up
   file:

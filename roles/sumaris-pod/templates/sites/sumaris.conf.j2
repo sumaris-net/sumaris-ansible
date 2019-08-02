@@ -31,7 +31,7 @@ server {
   root /opt/{{ username }}/{{ target_dir }}/www;
   index index.html;
 
-  location ~ ^{{ base_path }}/(graphql|graphiql|api|core|service|download) {
+  location ~ ^{{ app_base_path }}/(graphql|graphiql|api|core|service|download) {
     proxy_pass http://127.0.0.1:{{ http_port }};
 
     proxy_set_header  X-Real-IP       $remote_addr;
@@ -52,8 +52,9 @@ server {
     #proxy_max_temp_file_size 2G;
   }
 
-  location {{ base_path }}/ {
-    #alias /opt/{{ username }}/{{ target_dir }}/www;
+  location {{ app_base_path }}/ {
+    #ALIAS-INSERT-POINT
+
     try_files $uri $uri/ /index.html =404;
   }
 }

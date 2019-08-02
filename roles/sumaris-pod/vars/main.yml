@@ -14,9 +14,9 @@ db_hsqldb_file: 'http://www.hsqldb.org/repos/org/hsqldb/hsqldb/{{ db_hsqldb_vers
 db_hsqldb_hash_file: sha256:417294fff9d6b6a4f7ee522982ed2693cdda28d131da0d9e4f048a57d6e1cdb2.
 
 # App version
-app_version: 0.15.1
+app_version: 0.15.2
 app_file: 'https://github.com/sumaris-net/sumaris-app/releases/download/v{{ app_version }}/sumaris-app-v{{ app_version }}-web.zip'
-app_hash_file: sha256:c4207c237e2b88e10a354a36af258d1641a338118b1ebb36186e91f11e1201ce
+app_hash_file: sha256:95b0e88ee00ff0a602e8908c43a62a4e9a4d3bcf256e70d638276d1a956d2535
 
 # Other vars
 admin_email: contact@e-is.pro
