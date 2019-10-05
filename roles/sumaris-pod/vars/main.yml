@@ -25,9 +25,9 @@ app_hash_file: sha256:aaf70120999e0320a36b0d24fac727be2940cae37a3ddd80233eb0e63d
 
 
 # App Android version
-apk_version: 0.17.2
+apk_version: 0.17.3
 apk_file: 'https://github.com/sumaris-net/sumaris-app/releases/download/v{{ app_version }}/sumaris-app-v{{ app_version }}-android.apk'
-apk_hash_file: sha256:2a121413e6006cd38a2331644d55d3df5cddcace14b7eadb67630e57da0cd6fc
+apk_hash_file: sha256:2c348bbec0470c91792fd4872c1abcd50ba1155308a20b8d423b793b9fac72f3a
 
 # Other vars
 admin_email: contact@e-is.pro
