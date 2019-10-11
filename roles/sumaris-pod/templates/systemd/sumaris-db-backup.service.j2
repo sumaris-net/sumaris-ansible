@@ -3,6 +3,6 @@ Description=Let's Encrypt {{ sumaris_host }} renewal
 
 [Service]
 Type=oneshot
-ExecStart=/opt/{{ username }}/{{ target_dir }}/bin/sumaris-db.sh backup
+ExecStart=/opt/{{ username }}/{{ target_dir }}/bin/sumaris-db-hsqldb.sh backup
 
 
