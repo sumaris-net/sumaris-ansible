@@ -1,8 +1,17 @@
 [Unit]
-Description=Let's Encrypt {{ sumaris_host }} renewal
+Description=Backup sumaris-db-{{ username }} database
+Wants=network-online.target
+After=network-online.target
 
 [Service]
 Type=oneshot
+
+WorkingDirectory=/opt/{{ username }}/{{ target_dir }}/
+
+User={{ username }}
+Group={{ username }}
+
 ExecStart=/opt/{{ username }}/{{ target_dir }}/bin/sumaris-db-hsqldb.sh backup
 
-
+[Install]
+WantedBy=multi-user.target
