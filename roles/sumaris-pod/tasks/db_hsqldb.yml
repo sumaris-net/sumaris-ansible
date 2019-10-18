@@ -19,7 +19,7 @@
     content: "{{ db_version }}"
     dest: /opt/{{ username }}/{{ target_dir }}/data/db/version.appup
   check_mode: yes
-  when: (not sumaris_db_missing.changed and db_reset)
+  when: ((not sumaris_db_missing.changed) and db_reset)
   register: sumaris_db_version
 
 - name: DB {{ username }} - DB already installed
