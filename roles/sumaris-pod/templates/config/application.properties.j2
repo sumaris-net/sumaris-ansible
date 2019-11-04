@@ -24,7 +24,7 @@ sumaris.server.keypair.salt={{ pod_salt }}
 sumaris.server.keypair.password={{ pod_password }}
 
 # Useful URL
-sumaris.server.account.register.confirm.url=${server.url}/confirm/{email}/{code}
+sumaris.server.account.register.confirm.url=${server.url}/api/confirmEmail?email={email}&code={code}
 
 # SMTP server
 spring.mail.enable=true
