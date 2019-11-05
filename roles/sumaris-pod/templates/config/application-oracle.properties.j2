@@ -1,0 +1,18 @@
+# HSQLDB configuration
+spring.datasource.driver-class-name=oracle.jdbc.driver.OracleDriver
+spring.datasource.hikari.connectionTestQuery=SELECT 1 FROM STATUS WHERE ID=1
+spring.datasource.hikari.initializationFailTimeout=-1
+spring.jpa.database-platform=org.hibernate.spatial.dialect.oracle.OracleSpatial10gDialect
+spring.jpa.properties.hibernate.dialect=${spring.jpa.database-platform}
+
+# Database connection
+spring.datasource.username={{ db_user_name }}
+spring.datasource.password={{ db_user_pwd }}
+spring.jpa.properties.hibernate.default_catalog=
+spring.jpa.properties.hibernate.default_schema=${spring.datasource.username}
+sumaris.persistence.jdbc.url=jdbc:oracle:thin:@{{ db_host }}:{{ db_port }}/{{ db_name }}
+spring.datasource.url=${sumaris.persistence.jdbc.url}
+spring.jpa.hibernate.use-new-id-generator-mappings=false
+
+# TODO: replacer dans le fichier commun
+sumaris.persistence.init.statisticalRectangles=false
