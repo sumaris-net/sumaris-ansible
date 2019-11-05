@@ -13,8 +13,8 @@ db_host: '127.0.0.1'
 db_port: 9002
 db_name: 'sumaris-{{ username }}'
 db_reset: false
-db_user_name: 'sa'
-db_user_pwd: ''
+db_username: 'sa'
+db_password: ''
 db_backup_ftp_url: ''
 db_backup_ftp_dir: '/sumaris-db-{{ username }}-backup/'
 db_backup: true
