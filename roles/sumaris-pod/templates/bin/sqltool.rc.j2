@@ -3,7 +3,7 @@
 # This is a sample RC configuration file used by SqlTool, DatabaseManager,
 # and any other program that uses the org.hsqldb.util.RCData class.
 
-urlid sumaris-{{ username }}
-url jdbc:hsqldb:hsql://127.0.0.1:{{ db_port }}/sumaris-{{ username }}
+urlid {{ db_name }}
+url jdbc:hsqldb:hsql://127.0.0.1:{{ db_port }}/{{ db_name }}
 username sa
 password

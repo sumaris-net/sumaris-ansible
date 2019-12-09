@@ -3,5 +3,5 @@
 /host_vars/*
 /ssh.cfg
 /hosts.yml
-/testing.yml
-/production.yml
+/playbook/*-production.yml
+/playbook/*-testing.yml
