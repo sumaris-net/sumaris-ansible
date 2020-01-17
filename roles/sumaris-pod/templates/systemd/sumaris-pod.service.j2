@@ -6,13 +6,10 @@ After=network-online.target
 [Service]
 Type=forking
 Restart=always
-RestartSec=1
-
+RestartSec=5
 WorkingDirectory=/opt/{{ username }}/{{ target_dir }}/
-
 User={{ username }}
 Group={{ username }}
-
 ExecStart=/opt/{{ username }}/{{ target_dir }}/bin/sumaris-pod.sh start
 ExecStop=/opt/{{ username }}/{{ target_dir }}/bin/sumaris-pod.sh stop
 ExecReload=/opt/{{ username }}/{{ target_dir }}/bin/sumaris-pod.sh restart

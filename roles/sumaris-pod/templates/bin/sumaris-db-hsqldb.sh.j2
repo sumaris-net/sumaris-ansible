@@ -38,13 +38,13 @@ start() {
 
 backup() {
   TOOL_JAR_FILE="${SUMARIS_HOME}/lib/sqltool-{{ db_hsqldb_version }}.jar"
-  BACKUP_DIR=${DATA_DIRECTORY}/db-backup/  # WARN: with trailing slash
+  BACKUP_DIR=${DATA_DIRECTORY}/db-backup/  # WARN: don't forget the trailing slash, otherwise hsql backup will NOT work
   BACKUP_LOG="/var/log/{{ username }}/sumaris-db-backup.log"
   FTP_URL={{ db_backup_ftp_url }}
   FTP_REMOTE_DIR={{ db_backup_ftp_dir }}
 
   echo "Starting backup of $SERVICE_NAME..."
-  echo "Starting backup of $SERVICE_NAME..." > $BACKUP_LOG
+  echo "Starting backup of $SERVICE_NAME..." >> $BACKUP_LOG
   echo " - dir: $BACKUP_DIR"
   echo " - log: $BACKUP_LOG"
   if [ "_${FTP_URL}" != "_" ]; then
@@ -61,11 +61,12 @@ backup() {
   fi
   BACKUP_FILE=$(ls -1t $BACKUP_DIR | head -1)
   echo "Created file: $BACKUP_FILE"
+  echo "Created file: $BACKUP_FILE" >> $BACKUP_LOG
 
   # FTP upload
   if [[ "_${FTP_URL}" != "_" ]]; then
     echo "Uploading file $BACKUP_FILE to FTP..."
-    echo "Uploading file $BACKUP_FILE to FTP..." > $BACKUP_LOG
+    echo "Uploading file $BACKUP_FILE to FTP..." >> $BACKUP_LOG
     lftp $FTP_URL -e "mirror -e -R $BACKUP_DIR $FTP_REMOTE_DIR ; quit" >> $BACKUP_LOG 2>> $BACKUP_LOG
     if [[ $? -ne 0 ]]; then
       echo "ERROR while uploading backup file to FTP. See log: $BACKUP_LOG"
@@ -74,6 +75,7 @@ backup() {
   fi
 
   echo "DB backup succeed"
+  echo "DB backup succeed" >> $BACKUP_LOG
   exit 0
 }
 
@@ -144,6 +146,7 @@ backup)
         PID=`cat $PID_FILE`
         if [ -z "`ps axf | grep ${PID} | grep -v grep`" ]; then
             echo "DB not running (process dead but PID file exists)"
+            echo "DB not running (process dead but PID file exists)" >> $BACKUP_LOG
             rm -f $PID_FILE
             exit 1
         else
@@ -151,6 +154,7 @@ backup)
         fi
     else
         echo "DB not running (PID not found)"
+        echo "DB not running (PID not found)" >> $BACKUP_LOG
         exit 1
     fi
 ;;

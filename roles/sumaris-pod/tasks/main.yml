@@ -11,3 +11,11 @@
 
 - name: Pod {{ username }} - Configure App web site
   include_tasks: app.yml
+
+- name: Pod {{ username }} - Configure script bin/sumaris-status.sh
+  template:
+    src: templates/bin/sumaris-status.sh.j2
+    dest: /opt/{{ username }}/{{target_dir}}/bin/sumaris-status.sh
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: 0755

@@ -145,7 +145,7 @@
     enabled: yes
     daemon_reload: yes
     name: sumaris-db-backup-{{ username }}.timer
-  when: (sumaris_db_backup_service.changed or sumaris_db_backup_timer.changed)
+    force: yes
 
   # -------- Last clean up -------- #
 
