@@ -20,10 +20,10 @@ db_backup_ftp_dir: '/sumaris-db-{{ username }}-backup/'
 db_backup: true
 
 app_name: SUMARiS
-app_default_peer: True
+app_default_peer: true
 app_base_path: ''
 
-nginx_default_server: False
+nginx_default_server: false
 spring:
   mail:
     host: smtp.gmail.com

@@ -21,10 +21,10 @@
   when: not sumaris_jar_exists.changed
   register: sumaris_jar_updated
 
-- name: Pod {{ username }} - Configure config/application-{{ username }}.properties
+- name: Pod {{ username }} - Configure config/application.properties
   template:
     src: templates/config/application.properties.j2
-    dest: /opt/{{ username }}/{{ target_dir }}/config/application-{{ username }}.properties
+    dest: /opt/{{ username }}/{{ target_dir }}/config/application.properties
     owner: "{{ username }}"
     group: "{{ username }}"
   register: sumaris_pod_config
@@ -78,6 +78,5 @@
     - /opt/{{ username }}/{{target_dir}}/sumaris-pod.sh
     - /opt/{{ username }}/{{target_dir}}/sumaris-pod.jar
     - /opt/{{ username }}/{{target_dir}}/application.properties
-    - /opt/{{ username }}/{{target_dir}}/config/application.properties
-    - /usr/lib/systemd/system/sumaris-pod-{{ username }}.service
+    - /opt/{{ username }}/{{target_dir}}/config/application-{{ username }}.properties
   ignore_errors: True

@@ -26,7 +26,7 @@ JAVA_OPTS="$JAVA_OPTS -Dsumaris.basedir=${SUMARIS_HOME}"
 #JAVA_OPTS="$JAVA_OPTS -Dsumaris.data.directory=${DATA_DIRECTORY}"
 JAVA_OPTS="$JAVA_OPTS -Dsumaris.log.file=${SUMARIS_LOG}"
 JAVA_OPTS="$JAVA_OPTS -Dspring.config.additional-location=/opt/{{ username }}/{{ target_dir }}/config/"
-JAVA_OPTS="$JAVA_OPTS -Dspring.profiles.active={{ username }},{{ db_type }}"
+JAVA_OPTS="$JAVA_OPTS -Dspring.profiles.active={{ db_type }}"
 JAVA_CMD="java -server $JAVA_OPTS -jar $JAR_FILE $SUMARIS_HOME"
 
 start() {
