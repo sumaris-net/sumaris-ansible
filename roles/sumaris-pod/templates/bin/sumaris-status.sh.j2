@@ -1,15 +1,4 @@
 #!/bin/bash
 
-DB_SERVICE_NAME=sumaris-db-{{ username }}
-DB_BACKUP_SERVICE_NAME=sumaris-db-backup-{{ username }}
-POD_SERVICE_NAME=sumaris-pod-{{ username }}
-
-
-
-echo "---------------- SUMARIS {{ username }} / Core services "------------------"
-systemctl status "${DB_SERVICE_NAME}.service"
-systemctl status "${POD_SERVICE_NAME}.service"
-
-echo "---------------- SUMARIS {{ username }} / Backup services "----------------"
-systemctl status "${DB_BACKUP_SERVICE_NAME}.service"
-systemctl status "${DB_BACKUP_SERVICE_NAME}.timer"
+echo "---------------- SUMARIS {{ username }} :: services ------------------"
+systemctl status sumaris-db-{{ username }} sumaris-pod-{{ username }} sumaris-db-backup-{{ username }}.service sumaris-db-backup-{{ username }}.timer
