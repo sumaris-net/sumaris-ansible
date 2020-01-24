@@ -14,9 +14,9 @@ TARGET_FILES="host_vars/*.yml playbook/*.yml hosts.yml ssh.cfg"
 TARGET_FILES_PATTERN="host_vars/.*\.yml|playbook/.*\.yml|hosts\.yml|ssh\.cfg"
 
 case "$1" in
-)
+encrypt)
     cd ${BASEDIR}
-    echo " ${TARGET_FILES}..."
+    echo "Encrypt ${TARGET_FILES}..."
 
     ansible-vault encrypt --vault-password-file ${VAUL_PASSWORD_FILE} ${TARGET_FILES}
 ;;
@@ -26,9 +26,9 @@ decrypt)
 
     ansible-vault decrypt --vault-password-file ${VAUL_PASSWORD_FILE} ${TARGET_FILES}
 ;;
-decrypt_ssh)
+encrypt_ssh)
     cd ${BASEDIR}
-    echo "Decrypt ${SSH_CFG_FILE}..."
+    echo "Encrypt ${SSH_CFG_FILE}..."
 
     ansible-vault encrypt --vault-password-file ${VAUL_PASSWORD_FILE} ${SSH_CFG_FILE}
 ;;
