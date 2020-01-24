@@ -10,9 +10,8 @@ PLAYBOOK_DIR="playbook"
 HOSTS_FILE="hosts.yml"
 SSH_CFG_FILE="ssh.cfg"
 
-TARGET_FILES="${HOST_VARS_DIR}/*.yml ${PLAYBOOK_DIR}/*.yml ${HOSTS_FILE} ${SSH_CFG_FILE}"
-#TARGET_FILES_PATTERN="hosts\.yml"
-TARGET_FILES_PATTERN="encryption\.sh"
+TARGET_FILES="host_vars/*.yml playbook/*.yml hosts.yml ssh.cfg"
+TARGET_FILES_PATTERN="host_vars/.*\.yml|playbook/.*\.yml|hosts\.yml|ssh\.cfg"
 
 case "$1" in
 encrypt)
@@ -41,10 +40,6 @@ check)
 '
     for f in $(git diff --name-only | grep -E $TARGET_FILES_PATTERN)
     do
-
-      f='hosts.yml'
-      echo "TODO Checking file $f..."
-
       # test for the presence of the required bit.
       MATCH=`head -n1 $f | grep --no-messages $REQUIRED`
       if [ ! $MATCH ] ; then

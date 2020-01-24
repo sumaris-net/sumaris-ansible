@@ -1,6 +1,2 @@
 /.idea
 /.local
-/host_vars/*
-/ssh.cfg
-/hosts.yml
-/playbook
