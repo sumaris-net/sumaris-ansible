@@ -39,8 +39,9 @@ check)
     # carriage return hack. Leave it on 2 lines.
     cr='
 '
-    for f in $(git diff --cached --name-only | grep -E $TARGET_FILES_PATTERN)
+    for f in $(git diff --name-only | grep -E $TARGET_FILES_PATTERN)
     do
+
       f='hosts.yml'
       echo "TODO Checking file $f..."
 
