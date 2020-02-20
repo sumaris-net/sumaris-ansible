@@ -23,6 +23,10 @@ app_name: SUMARiS
 app_default_peer: true
 app_base_path: ''
 
+apk_dir: '/opt/{{ username }}/{{ target_dir }}/data/download/android'
+apk_latest_basename: 'sumaris-app-latest.apk'
+apk_install_url: 'https://{{ sumaris_host }}{{ app_base_path }}/download/android/{{ apk_latest_basename }}'
+
 nginx_default_server: false
 spring:
   mail:

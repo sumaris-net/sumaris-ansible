@@ -80,6 +80,45 @@
     mode: 0555
   when: (sumaris_app_missing.changed or sumaris_app_version.changed)
 
+- name: App {{ username }} - Creates directory {{ apk_dir }}
+  file:
+    path: "{{ apk_dir }}"
+    state: directory
+    owner: "{{ username }}"
+    group: "www-data"
+    mode: 0775
+  register: sumaris_apk_missing
+
+- name: App {{ username }} - Check if Apk (Android build) need update
+  copy:
+    content: "{{ apk_version }}"
+    dest: "{{ apk_dir }}/version.appup"
+  check_mode: yes
+  when: (not sumaris_apk_missing.changed)
+  register: sumaris_apk_version
+
+- name:  App {{ username }} - Apk (Android build) already installed
+  debug:
+    msg: "Apk already installed. Skipping installation"
+  when: (not sumaris_apk_missing.changed and not sumaris_apk_version.changed)
+
+- name: App {{ username }} - Download Apk (Android build)
+  get_url:
+    url: "{{ apk_file }}"
+    dest: "{{ apk_dir }}/{{ apk_basename }}"
+    owner: "{{ username }}"
+    group: "www-data"
+    mode: 0555
+    checksum: "{{ apk_hash_file }}"
+  when: (sumaris_apk_missing.changed or sumaris_apk_version.changed)
+
+- name: App {{ username }} - Create a link for latest Apk (Android build)
+  file:
+    src: "{{ apk_dir }}/{{ apk_basename }}"
+    dest: "{{ apk_dir }}/{{ apk_latest_basename }}"
+    state: link
+  when: (sumaris_apk_missing.changed or sumaris_apk_version.changed)
+
 - name: App {{ username }} - Create directory /etc/letsencrypt/configs
   file:
     path: /etc/letsencrypt/configs
