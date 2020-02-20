@@ -20,7 +20,7 @@ db_hsqldb_tool_hash_file: sha256:a03fb31971064fe66655ce0ebe0902fca5e9d2cbe7295f9
 # App web version
 app_version: 1.0.0
 app_file: 'https://github.com/sumaris-net/sumaris-app/releases/download/v{{ app_version }}/sumaris-app-v{{ app_version }}-web.zip'
-app_hash_file: sha256:919c10b0f115b72feffcaadf8dccb883c9a1cded80804a3d8e1a85d7b6b5ddef
+app_hash_file: sha256:2e16feede362c47cc6024ac474c81dcb9046c2e64fe2f5b6fb4f042b21964aae
 
 # App Android version
 apk_version: 1.0.0
