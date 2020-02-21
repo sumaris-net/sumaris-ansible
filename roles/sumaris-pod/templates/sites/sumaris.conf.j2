@@ -31,7 +31,7 @@ server {
   root /opt/{{ username }}/{{ target_dir }}/www;
   index index.html;
 
-  location ~ ^{{ app_base_path }}/(graphql|graphiql|api|core|service|download|sparql|ontology) {
+  location ~ ^{{ app_base_path }}/(graphql|graphiql|api|core|service|download|sparql|ontology|websocket|yasgui|rdf|webvowl) {
     proxy_pass http://{{ pod_address }}:{{ pod_port }};
 
     proxy_set_header  X-Real-IP       $remote_addr;
