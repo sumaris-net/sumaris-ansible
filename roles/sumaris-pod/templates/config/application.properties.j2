@@ -7,8 +7,9 @@ server.port={{ pod_port }}
 server.address={{ pod_address }}
 server.url=https://{{ sumaris_host }}{{ app_base_path }}
 
-# Disable Hibernate validation
+# Disable Hibernate validation, to let Liquibase manage the schema
 spring.jpa.hibernate.ddl-auto=none
+spring.jpa.properties.hibernate.hbm2ddl.auto=none
 spring.liquibase.enabled=true
 
 # Common properties
