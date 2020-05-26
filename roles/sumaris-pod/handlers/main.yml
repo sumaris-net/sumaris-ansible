@@ -2,8 +2,3 @@
   systemd:
     name: nginx
     state: restarted
-
-- name: Restart sumaris-db-{{ username }}
-  systemd:
-    name: sumaris-db-{{ username }}
-    state: restarted

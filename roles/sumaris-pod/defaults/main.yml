@@ -5,7 +5,7 @@ pod_salt: '{{ username }}@{{ sumaris_host }}'
 pod_password: '{{ username }}'
 pod_address: '127.0.0.1'
 pod_port: 8081
-pod_rdf_enabled: true
+pod_rdf_enabled: false
 
 admin_email: contact@e-is.pro
 

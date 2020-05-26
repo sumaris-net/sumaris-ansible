@@ -43,6 +43,7 @@
     state: stopped
   ignore_errors: True
   when: sumaris_db_version.changed
+  register: sumaris_db_stop
 
 - name: DB {{ username }} - Extract DB
   unarchive:
@@ -75,7 +76,7 @@
     owner: "{{ username }}"
     group: "{{ username }}"
     mode: 0755
-  notify: Restart sumaris-db-{{ username }}
+  register: sumaris_db_script
 
 - name: DB {{ username }} - Configure sqltool.rc file
   template:
@@ -111,7 +112,7 @@
     dest: /etc/systemd/system/sumaris-db-{{ username }}.service
     owner: root
     mode: 0644
-  notify: Restart sumaris-db-{{ username }}
+  register: sumaris_db_service
 
 - name: DB {{ username }} - Daemon reload sumaris-db
   systemd:
@@ -119,6 +120,13 @@
     daemon_reload: yes
     name: sumaris-db-{{ username }}.service
     force: yes
+  when: sumaris_db_service.changed
+
+- name: DB {{ username }} - Restart sumaris-db-{{ username }}
+  systemd:
+    name: sumaris-db-{{ username }}
+    state: restarted
+  when: (sumaris_db_missing.changed or sumaris_db_version.changed or sumaris_db_stop.changed or sumaris_db_script.changed or sumaris_db_service.changed)
 
   # -------- DB backup as systemd timer -------- #
 
@@ -146,6 +154,7 @@
     daemon_reload: yes
     name: sumaris-db-backup-{{ username }}.timer
     force: yes
+  when: db_backup
 
   # -------- Last clean up -------- #
 
