@@ -29,6 +29,7 @@ apk_latest_basename: 'sumaris-app-latest.apk'
 apk_install_url: 'https://{{ sumaris_host }}{{ app_base_path }}/download/android/{{ apk_latest_basename }}'
 
 nginx_default_server: false
+ssl_only: True
 spring:
   mail:
     host: smtp.gmail.com

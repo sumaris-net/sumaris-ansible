@@ -7,10 +7,42 @@ server {
 
   include includes/letsencrypt.conf;
 
-  # redirect all HTTP requests to HTTPS with a 301 Moved Permanently response.
+  root /opt/{{ username }}/{{ target_dir }}/www;
+  index index.html;
+
+{% if ssl_only %}
   location / {
+    # redirect all HTTP requests to HTTPS with a 301 Moved Permanently response.
     return 301 https://{{ sumaris_host }}$request_uri;
   }
+{% else %}
+  # Allow Access to Pod, in HTTP
+  location ~ ^{{ app_base_path }}/(api|core|service|download|sparql|ontology|yasgui|rdf|webvowl|taxon) {
+      proxy_pass http://{{ pod_address }}:{{ pod_port }};
+
+      proxy_set_header  X-Real-IP       $remote_addr;
+      proxy_set_header  Host            $host;
+      proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header  X-Forwarded-Proto $scheme;
+      proxy_set_header  X-NgninX-Proxy  true;
+      proxy_redirect    off;
+
+      # Web socket support
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection "upgrade";
+      proxy_read_timeout 86400s;
+      proxy_send_timeout 86400s;
+
+      # optimize downloading files larger than 1G (adjust if needed)
+      #proxy_max_temp_file_size 2G;
+      break;
+    }
+
+    location / {
+      try_files $uri $uri/ /index.html =404;
+    }
+{% endif %}
 } 
 
 server {
@@ -22,7 +54,11 @@ server {
   # SSL config
   ssl_certificate /etc/letsencrypt/live/{{ sumaris_host }}/fullchain.pem;
   ssl_certificate_key /etc/letsencrypt/live/{{ sumaris_host }}/privkey.pem;
+  {% if ssl_only %}
+  include includes/ssl-only.conf;
+  {% else %}
   include includes/ssl.conf;
+  {% endif %}
   ssl_trusted_certificate /etc/letsencrypt/live/{{ sumaris_host }}/fullchain.pem;
 
   # allow large uploads of files
@@ -31,7 +67,7 @@ server {
   root /opt/{{ username }}/{{ target_dir }}/www;
   index index.html;
 
-  location ~ ^{{ app_base_path }}/(graphql|graphiql|api|core|service|download|sparql|ontology|websocket|yasgui|rdf|webvowl) {
+  location ~ ^{{ app_base_path }}/(graphql|graphiql|api|core|service|download|sparql|ontology|websocket|yasgui|rdf|webvowl|taxon) {
     proxy_pass http://{{ pod_address }}:{{ pod_port }};
 
     proxy_set_header  X-Real-IP       $remote_addr;
@@ -50,6 +86,7 @@ server {
 
     # optimize downloading files larger than 1G (adjust if needed)
     #proxy_max_temp_file_size 2G;
+    break;
   }
 
   location {{ app_base_path }}/ {
