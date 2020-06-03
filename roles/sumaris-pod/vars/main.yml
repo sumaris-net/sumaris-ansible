@@ -9,6 +9,7 @@ db_version: 1.2.2
 db_file: 'https://github.com/sumaris-net/sumaris-pod/releases/download/v{{ db_version }}/sumaris-db-{{ db_version }}.zip'
 db_hash_file: sha256:5bf405ead8775214cc02061593611977c4caaa0e9b45ef447d6b8ebcce40aea7
 db_jvm_opts: '-Xms512m -Xmx1024m'
+# 1.2.5 = ec202f6c8b741ab45717656b280c2f908560d3767b4c210f446b2acf3af3ba4f
 
 # DBMS version
 db_hsqldb_version: 2.4.1
@@ -18,15 +19,15 @@ db_hsqldb_tool_file: 'http://www.hsqldb.org/repos/org/hsqldb/sqltool/{{ db_hsqld
 db_hsqldb_tool_hash_file: sha256:a03fb31971064fe66655ce0ebe0902fca5e9d2cbe7295f953e29e79e8a77843c
 
 # App web version
-app_version: 1.2.4
+app_version: 1.2.5
 app_file: 'https://github.com/sumaris-net/sumaris-app/releases/download/v{{ app_version }}/sumaris-app-v{{ app_version }}-web.zip'
-app_hash_file: sha256:feedd0ff64ab7d5767da9117b518cd3234cf4deb52118d597678ec52d92f6ed0
+app_hash_file: sha256:5d5a931aa429b2d2cc762970e0d65fa1ab5f221764d8bde053a2bd71d7135e86
 
 # App Android version
-apk_version: 1.2.4
+apk_version: 1.2.5
 apk_basename: 'sumaris-app-v{{ apk_version }}-android.apk'
 apk_file: 'https://github.com/sumaris-net/sumaris-app/releases/download/v{{ apk_version }}/{{ apk_basename }}'
-apk_hash_file: sha256:e04187141c0ff1283a74768b2faad414caf4a02d8d81ff4633943913b280be1b
+apk_hash_file: sha256:09e03d9ddff0037d0163b01c274109e8c38e7fdce3a12f872a432bba8a312ee6
 
 # Other vars
 admin_email: contact@e-is.pro
