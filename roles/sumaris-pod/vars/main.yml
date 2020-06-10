@@ -1,7 +1,7 @@
 # Pod version
-pod_version: 1.2.4
+pod_version: 1.2.5
 jar_file: 'https://github.com/sumaris-net/sumaris-pod/releases/download/v{{ pod_version }}/sumaris-pod-{{ pod_version }}.jar'
-jar_hash_file: sha256:6eb5b51a14c7314d875403cf677bae409a5106cae3609e24e335477f689901f9
+jar_hash_file: sha256:e945edb492e4bd7f84ac22bac942b6051919550086416bba6c928be99d7f990a
 pod_jvm_opts: '-Xms512m -Xmx1024m -Duser.timezone=UTC'
 
 # DB data version
@@ -9,7 +9,7 @@ db_version: 1.2.2
 db_file: 'https://github.com/sumaris-net/sumaris-pod/releases/download/v{{ db_version }}/sumaris-db-{{ db_version }}.zip'
 db_hash_file: sha256:5bf405ead8775214cc02061593611977c4caaa0e9b45ef447d6b8ebcce40aea7
 db_jvm_opts: '-Xms512m -Xmx1024m'
-# 1.2.5 = ec202f6c8b741ab45717656b280c2f908560d3767b4c210f446b2acf3af3ba4f
+# 1.2.5 = 3fe7d4bd5f47825c1c2f85cee52ab36fbcd1e846ed77071608c8a8009611ad44
 
 # DBMS version
 db_hsqldb_version: 2.4.1
