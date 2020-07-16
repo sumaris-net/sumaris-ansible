@@ -11,7 +11,7 @@
   wait_for:
     port: "22"
     state: "started"
-    host: "{{ ansible_ssh_host }}"
+    host: "{{ ansible_host }}"
     connect_timeout: "5"
     timeout: "10"
   delegate_to: "{{ managing_hosts[0] }}"
@@ -34,7 +34,7 @@
   wait_for:
     port: "{{ ansible_port }}"
     state: "started"
-    host: "{{ ansible_ssh_host }}"
+    host: "{{ ansible_host }}"
     connect_timeout: "5"
     timeout: "10"
   delegate_to: "{{ managing_hosts[0] }}"

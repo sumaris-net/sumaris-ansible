@@ -1,0 +1,24 @@
+hostname: eis.sfa-test-server-debian9.local
+trigramme: SFA
+default_domain: eis.sfa-test-server-debian9.local # default nginx domain
+nginx_default_server: False
+local_name: eis.sfa-test-server-debian9.local
+
+nameservers:
+  - 80.10.246.2
+  - 80.10.246.129
+
+# SMTP config
+spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: sumaris.net@gmail.com
+    password: yohwtdrskzknmqah
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true

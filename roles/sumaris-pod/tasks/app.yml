@@ -151,6 +151,7 @@
   command: certbot -n --agree-tos --config /etc/letsencrypt/configs/{{ sumaris_host }}.ini certonly
   args:
     creates: /etc/letsencrypt/live/{{ sumaris_host }}/cert.pem
+#  ignore_errors: yes
 
 - name: App {{ username }} - Nginx HTTPS
   template:

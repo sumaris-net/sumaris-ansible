@@ -1,0 +1,27 @@
+- hosts: sfa-test-server-debian9
+  become: true
+  gather_facts: True
+  roles:
+    - role: common
+    - role: webserver
+    - role: sumaris-pod
+      vars:
+        sumaris_host: 'eis.sfa-test-server-debian9.local'
+        username: test
+        http_port: 8080
+        db_port: 9002
+        #db_reset: False
+        app_name: OBSDEB
+        db_backup: False
+        pod_version: 1.2.7
+        jar_hash_file: sha256:07500b09f062e627363e025b31d39490c227ebf2f1e410ffb45b6aa6228b7d7a
+        db_version: 1.2.7
+        db_hash_file: sha256:3ff463a9e4bd02371fcda8eebe39b7b38bb5438e9c093a1ad22a61236788014e
+        app_version: 1.2.6
+        app_hash_file: sha256:f3a1d590651eca8c26361922f72840b7a8f2ace2daa23dbcd2346a2fd0ed909c
+        apk_version: 1.2.6
+        apk_hash_file: sha256:a1ec4d112d86f0a89e3abb3db5b1583ac952cb6b00b88180063152e81456baef
+
+
+
+

@@ -1,6 +1,29 @@
 username: test
 sumaris_host: '{{ username }}.{{ hostvars[inventory_hostname].default_domain }}'
 
+# Default versions:
+
+# Pod version
+pod_version: 1.3.1
+jar_hash_file: sha256:a77bc289ba96dce26a3a758cb4fa8125a6998396f1a57e916227a15628484024
+
+# DB data version
+db_version: 1.3.1
+db_hash_file: sha256:48823b77f3d8389a6736c0ac3a8ebb4e6288844ff4caefb1bfdb1a18dddf96da
+
+# DBMS version
+db_hsqldb_version: 2.4.1
+db_hsqldb_hash_file: sha256:417294fff9d6b6a4f7ee522982ed2693cdda28d131da0d9e4f048a57d6e1cdb2
+db_hsqldb_tool_hash_file: sha256:a03fb31971064fe66655ce0ebe0902fca5e9d2cbe7295f953e29e79e8a77843c
+
+# App web version
+app_version: 1.2.5
+app_hash_file: sha256:5d5a931aa429b2d2cc762970e0d65fa1ab5f221764d8bde053a2bd71d7135e86
+
+# App Android version
+apk_version: 1.2.5
+apk_hash_file: sha256:09e03d9ddff0037d0163b01c274109e8c38e7fdce3a12f872a432bba8a312ee6
+
 pod_salt: '{{ username }}@{{ sumaris_host }}'
 pod_password: '{{ username }}'
 pod_address: '127.0.0.1'

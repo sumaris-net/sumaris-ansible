@@ -5,6 +5,9 @@ admins:
   blavenie:
     ssh_keys:
       - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBu3RwyQEPWjIEI4+2bOSYaegnDoBZ5O1nFWCRh39D+Y blavenie@EIS-FIXE3
+  ludovic:
+    ssh_keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHGlzUAOuXZkqSIdq9+3B/FgTDVNnaox0hSRd4zZ6Eqm ludovic@PECK-PC
 
 production:
 

@@ -1,6 +1,7 @@
 
 - name: Configure ssh port
   include_tasks: set_ssh_port.yml
+  when: managing_hosts[0] != 'localhost'
 
 # Gather facts should be set to false when running this role since it will
 # fail if the Ansible SSH port is not set correctly.
@@ -35,13 +36,27 @@
 
 - name: Download and configure packages on Debian
   include_tasks: debian_packages.yml    
-  when: ansible_distribution == "Debian"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
 
+# For distribution Debian <=9
 - name: Configure jail
   include_tasks: jail.yml
+#  when: ansible_distribution == "Debian" and ansible_distribution_major_version < 10
 
 - name: Configure iptables
   include_tasks: iptables.yml
+#  when: ansible_distribution == "Debian" and ansible_distribution_major_version < 10
+
+# For distribution Debian = 10
+#- name: Configure fail2ban
+#  include_role:
+#    name: fail2ban
+#  vars:
+#    fail2ban_services:
+#      - name: sshd
+#        port: "{{ ansible_port }}"
+#        bantime: 3600
+#  when: ansible_distribution == "Debian" and ansible_distribution_major_version == 10
 
 - name: Configure admins
   include_tasks: admins.yml

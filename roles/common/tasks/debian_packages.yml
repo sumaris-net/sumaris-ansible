@@ -3,3 +3,15 @@
   apt: 
     pkg: [fail2ban,  iptables-persistent]
     state: latest
+
+#- name: Enable iptables-services
+#  systemd:
+#    enabled: yes
+#    state: started
+#    name: iptables
+#
+#- name: Enable fail2ban
+#  systemd:
+#    enabled: yes
+#    state: started
+#    name: fail2ban

@@ -1,0 +1,24 @@
+hostname: sfa-test-server-ubuntu
+trigramme: SFA
+default_domain: sfa-test-server-ubuntu # default nginx domain
+nginx_default_server: False
+local_name: sfa-test-server-ubuntu
+
+nameservers:
+  - 80.10.246.2
+  - 80.10.246.129
+
+# SMTP config
+spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: sumaris.net@gmail.com
+    password: yohwtdrskzknmqah
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
