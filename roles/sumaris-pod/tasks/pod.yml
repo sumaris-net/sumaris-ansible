@@ -1,6 +1,6 @@
 - name: Pod {{ username }} - Check if JAR version exists
   file:
-    path: /opt/{{ username }}/{{ target_dir }}/lib/sumaris-pod-{{ pod_version }}.jar
+    path: /opt/{{ username }}/{{ target_dir }}/lib/sumaris-pod-{{ pod_version }}.war
     state: absent
   check_mode: yes
   register: sumaris_jar_exists
@@ -13,7 +13,7 @@
 - name: Pod {{ username }} - Download JAR {{ pod_version }}
   get_url:
     url: "{{ jar_file }}"
-    dest: /opt/{{ username }}/{{ target_dir }}/lib/sumaris-pod-{{ pod_version }}.jar
+    dest: /opt/{{ username }}/{{ target_dir }}/lib/sumaris-pod-{{ pod_version }}.war
     owner: "{{ username }}"
     group: "{{ username }}"
     mode: 0755
@@ -79,4 +79,5 @@
     - /opt/{{ username }}/{{target_dir}}/sumaris-pod.jar
     - /opt/{{ username }}/{{target_dir}}/application.properties
     - /opt/{{ username }}/{{target_dir}}/config/application-{{ username }}.properties
+    - /opt/{{ username }}/{{target_dir}}/lib/sumaris-pod-*.jar
   ignore_errors: True

@@ -13,6 +13,7 @@ spring.jpa.properties.hibernate.hbm2ddl.auto=none
 spring.liquibase.enabled=true
 
 # Common properties
+sumaris.launch.mode=production
 sumaris.name={{ app_name }}
 sumaris.basedir=/opt/{{ username }}/{{ target_dir }}
 sumaris.data.directory=/opt/{{ username }}/data
@@ -28,11 +29,14 @@ sumaris.server.keypair.password={{ pod_password }}
 sumaris.server.account.register.confirm.url=${server.url}/api/confirmEmail?email={email}&code={code}
 sumaris.android.install.url={{ apk_install_url }}
 
-# RDF features
-rdf.enabled={{ pod_rdf_enabled }}
+# Ontologies (RDF)
+sumaris.rdf.enabled={{ pod_rdf_enabled }}
+rdf.enabled=${sumaris.rdf.enabled}
+
+# Other options
+sumaris.persistence.denormalizedBatch.enabled={{ pod_denormalized_batch }}
 
 # SMTP server
-spring.mail.enable=true
 spring.mail.host={{ spring.mail.host }}
 spring.mail.port={{ spring.mail.port }}
 spring.mail.username={{ spring.mail.username }}

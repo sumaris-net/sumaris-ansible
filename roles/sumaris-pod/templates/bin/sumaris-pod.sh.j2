@@ -3,17 +3,21 @@
 SERVICE_NAME=sumaris-pod-{{ username }}
 
 if [ "${SUMARIS_HOME}_" == "_" ]; then
-  SUMARIS_HOME="/opt/{{ username }}/{{ target_dir }}"
+  SCRIPT_DIR=$(dirname $0)
+  SUMARIS_HOME=$(cd ${SCRIPT_DIR}/.. && pwd)
+fi
+if [ "${SUMARIS_LOG_DIR}_" == "_" ]; then
+  SUMARIS_LOG_DIR="/var/log/{{ username }}"
 fi
 if [ "${SUMARIS_LOG}_" == "_" ]; then
-  SUMARIS_LOG="/var/log/{{ username }}/sumaris-pod.log"
+  SUMARIS_LOG="${SUMARIS_LOG_DIR}/sumaris-pod.log"
 fi
 if [ "${DATA_DIRECTORY}_" == "_" ]; then
   DATA_DIRECTORY="${SUMARIS_HOME}/data"
 fi
 
 PID_FILE="${DATA_DIRECTORY}/${SERVICE_NAME}.pid"
-JAR_FILE="${SUMARIS_HOME}/lib/sumaris-pod-{{ pod_version }}.jar"
+JAR_FILE="${SUMARIS_HOME}/lib/sumaris-pod-{{ pod_version }}.war"
 
 JAVA_OPTS="{{ pod_jvm_opts }}"
 JAVA_OPTS="$JAVA_OPTS -Duser.timezone=UTC"
