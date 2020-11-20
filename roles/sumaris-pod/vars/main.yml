@@ -1,13 +1,13 @@
 # Pod version
-pod_version: 1.4.5
+pod_version: 1.4.6
 jar_file: 'https://github.com/sumaris-net/sumaris-pod/releases/download/{{ pod_version }}/sumaris-pod-{{ pod_version }}.war'
-jar_hash_file: sha256:f9181b0159d1c27ecc0ceac1b8c7a803747d1face7ac37ecedc3fc7c66808c36
+jar_hash_file: sha256:c9dfea65a620b5365dd890ed27f701932baeefab196b06962efd8ed4e49479a6
 pod_jvm_opts: '-Xms512m -Xmx1024m'
 
 # DB data version
-db_version: 1.4.5
+db_version: 1.4.6
 db_file: 'https://github.com/sumaris-net/sumaris-pod/releases/download/{{ db_version }}/sumaris-db-{{ db_version }}.zip'
-db_hash_file: sha256:556bcf1f51b5f205ff48d2c940f1e003818e81ca88943d04b033b115685262c6
+db_hash_file: sha256:243ec119c0ec7f73c37fa4e93d344b620cae58c41aee850db141e42e00f4559f
 db_jvm_opts: '-Xms512m -Xmx1024m'
 
 # DBMS version
@@ -18,12 +18,12 @@ db_hsqldb_tool_file: 'http://www.hsqldb.org/repos/org/hsqldb/sqltool/{{ db_hsqld
 db_hsqldb_tool_hash_file: sha256:e8945946e87a2b66058719deb7a9a9722b6a6b71f151a45eb52e3b12a4663b67
 
 # App web version
-app_version: 1.4.2
+app_version: 1.4.6
 app_file: 'https://github.com/sumaris-net/sumaris-app/releases/download/{{ app_version }}/sumaris-app-{{ app_version }}-web.zip'
-app_hash_file: sha256:c53731b22c8c275d1d11de71966bdc0c9394fc7382076a9f5d3c6335d3f63b8d
+app_hash_file: sha256:9988cb4b1fb5ff7c5843a0fd73bc403796cfc1d135335822b3669eddcf223520
 
 # App Android version
-apk_version: 1.4.2
+apk_version: 1.4.6
 apk_basename: 'sumaris-app-{{ apk_version }}-android.apk'
 apk_file: 'https://github.com/sumaris-net/sumaris-app/releases/download/{{ apk_version }}/{{ apk_basename }}'
 apk_hash_file: sha256:9988cb4b1fb5ff7c5843a0fd73bc403796cfc1d135335822b3669eddcf223520
