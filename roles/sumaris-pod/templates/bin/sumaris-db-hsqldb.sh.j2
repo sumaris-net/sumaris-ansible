@@ -141,6 +141,17 @@ restart)
     sleep 10s
     $0 start
 ;;
+compact)
+    TOOL_JAR_FILE="${SUMARIS_HOME}/lib/sqltool-{{ db_hsqldb_version }}.jar"
+    echo "Compacting database $SERVICE_NAME..."
+
+    # Backup to file
+    java -classpath $JAR_FILE:$TOOL_JAR_FILE org.hsqldb.cmdline.SqlTool --rcFile=$SUMARIS_HOME/bin/sqltool.rc --sql="SHUTDOWN COMPACT;" {{ db_name }} >> $SUMARIS_LOG 2>> $SUMARIS_LOG
+    if [[ $? -ne 0 ]]; then
+      echo "ERROR Failed to compact database. See log: $SUMARIS_LOG"
+      exit 1
+    fi
+;;
 backup)
     if [ -f $PID_FILE ]; then
         PID=`cat $PID_FILE`
