@@ -20,13 +20,13 @@ db_hsqldb_tool_hash_file: sha256:e8945946e87a2b66058719deb7a9a9722b6a6b71f151a45
 # App web version
 app_version: 1.4.6
 app_file: 'https://github.com/sumaris-net/sumaris-app/releases/download/{{ app_version }}/sumaris-app-{{ app_version }}-web.zip'
-app_hash_file: sha256:9988cb4b1fb5ff7c5843a0fd73bc403796cfc1d135335822b3669eddcf223520
+app_hash_file: sha256:64167c705b4f7cfaee84be7340f97115bd702dd05b8bcb92318c96202e0451e3
 
 # App Android version
 apk_version: 1.4.6
 apk_basename: 'sumaris-app-{{ apk_version }}-android.apk'
 apk_file: 'https://github.com/sumaris-net/sumaris-app/releases/download/{{ apk_version }}/{{ apk_basename }}'
-apk_hash_file: sha256:9988cb4b1fb5ff7c5843a0fd73bc403796cfc1d135335822b3669eddcf223520
+apk_hash_file: sha256:120910a1227e13eb3bbd1248d7c9cb91d55e7283cc52e8181a5d10aed68f8dc7
 
 # Other vars
 admin_email: contact@e-is.pro
