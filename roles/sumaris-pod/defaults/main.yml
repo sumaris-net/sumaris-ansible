@@ -5,12 +5,11 @@ pod_salt: '{{ username }}@{{ sumaris_host }}'
 pod_password: '{{ username }}'
 pod_address: '127.0.0.1'
 pod_port: 8081
+pod_jvm_opts: '-Xms512m -Xmx1024m'
 
 # Pod features config
 pod_rdf_enabled: false
 pod_denormalized_batch: false
-
-admin_email: contact@e-is.pro
 
 db_type: 'hsqldb'
 db_host: '127.0.0.1'
@@ -22,6 +21,7 @@ db_password: ''
 db_backup_ftp_url: ''
 db_backup_ftp_dir: '/sumaris-db-{{ username }}-backup/'
 db_backup: true
+db_jvm_opts: '-Xms512m -Xmx1024m'
 
 app_name: SUMARiS
 app_default_peer: true
@@ -30,6 +30,10 @@ app_base_path: ''
 apk_dir: '/opt/{{ username }}/{{ target_dir }}/data/download/android'
 apk_latest_basename: 'sumaris-app-latest.apk'
 apk_install_url: 'https://{{ sumaris_host }}{{ app_base_path }}/download/android/{{ apk_latest_basename }}'
+
+# Other vars
+admin_email: contact@e-is.pro
+target_dir: sumaris-pod
 
 nginx_default_server: false
 ssl_only: True
