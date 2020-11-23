@@ -16,12 +16,12 @@ db_file: 'https://github.com/sumaris-net/sumaris-pod/releases/download/{{ db_ver
 db_hash_file: sha256:f036c0865a3b469a13c6df41f4aa3834b139215c5407d176c37ffe4322d56fbb
 
 # App web version
-app_version: 1.5.0
+app_version: 1.5.1
 app_file: 'https://github.com/sumaris-net/sumaris-app/releases/download/{{ app_version }}/sumaris-app-{{ app_version }}-web.zip'
-app_hash_file: sha256:70c34d92c27ae1a60548cc6ca68d5d6bcbc6ed27fb9d896539ba947b6ee0f9a6
+app_hash_file: sha256:b9c603ad30fc94fdab0970246dfff4fd3dea6e0ff7620ae6133950bb566650f9
 
 # App Android version
-apk_version: 1.5.0
+apk_version: 1.5.1
 apk_basename: 'sumaris-app-{{ apk_version }}-android.apk'
 apk_file: 'https://github.com/sumaris-net/sumaris-app/releases/download/{{ apk_version }}/{{ apk_basename }}'
-apk_hash_file: sha256:c0f34bd477d71890f295d02e64cf708142820d75019ce366d1321dd6a1d80442
+apk_hash_file: sha256:af1967fbb7e54cae258151c8530000e623b805478bebbacd4e629a50ab1fb3e8
