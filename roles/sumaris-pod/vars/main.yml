@@ -1,19 +1,19 @@
 # DBMS version
-db_hsqldb_version: 2.5.0
+db_hsqldb_version: 2.5.1
 db_hsqldb_file: 'http://www.hsqldb.org/repos/org/hsqldb/hsqldb/{{ db_hsqldb_version }}/hsqldb-{{ db_hsqldb_version }}.jar'
-db_hsqldb_hash_file: sha256:acda459cc9d6a07b39b284364e93b5f29e11877d687e9544b91778d3554d2b38
+db_hsqldb_hash_file: sha256:a08bbe1187cf725b721a536ecc3cb825317a883616d6c4ef25d564a70ad83202
 db_hsqldb_tool_file: 'http://www.hsqldb.org/repos/org/hsqldb/sqltool/{{ db_hsqldb_version }}/sqltool-{{ db_hsqldb_version }}.jar'
-db_hsqldb_tool_hash_file: sha256:e8945946e87a2b66058719deb7a9a9722b6a6b71f151a45eb52e3b12a4663b67
+db_hsqldb_tool_hash_file: sha256:ee58c60028f6094ad1b44d3f5808e4c87d75ee29545257f99a4daa4500371c9d
 
 # Pod version
-pod_version: 1.5.0
+pod_version: 1.5.1
 jar_file: 'https://github.com/sumaris-net/sumaris-pod/releases/download/{{ pod_version }}/sumaris-pod-{{ pod_version }}.war'
-jar_hash_file: sha256:f01bca5f436c11ca67af09d2058b02fd4d7d3c99fa685af2f592922ea81226df
+jar_hash_file: sha256:e34135ab34c8226dc836869d22ea69a6e3dee7d9e13e40fe882b319fbba88ac8
 
 # DB data version
-db_version: 1.5.0
+db_version: 1.5.1
 db_file: 'https://github.com/sumaris-net/sumaris-pod/releases/download/{{ db_version }}/sumaris-db-{{ db_version }}.zip'
-db_hash_file: sha256:f036c0865a3b469a13c6df41f4aa3834b139215c5407d176c37ffe4322d56fbb
+db_hash_file: sha256:41525bc7deb51303fcfc6c60800cf44c113971715b8ee8ac0af0b09aeef466b2
 
 # App web version
 app_version: 1.5.1
