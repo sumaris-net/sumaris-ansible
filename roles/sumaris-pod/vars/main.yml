@@ -37,4 +37,4 @@ app_hash_file: sha256:ba624690845ed96d44c3a9a1251814027eaac0bc7905271a348a3e58b3
 apk_version: 1.5.4
 apk_basename: 'sumaris-app-{{ apk_version }}-android.apk'
 apk_file: 'https://github.com/sumaris-net/sumaris-app/releases/download/{{ apk_version }}/{{ apk_basename }}'
-apk_hash_file: sha256:5c8ef2f6a02ac0a617396346af221d3e3e6a8fa22318eee90df8c15d6232a9d0
+apk_hash_file: sha256:8d107adf04d0d4308f551688221da14ce269e36655a7c7d681c428fee5cc09aa
