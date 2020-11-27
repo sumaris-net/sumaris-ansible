@@ -1,27 +1,40 @@
 # DBMS version
-db_hsqldb_version: 2.5.1
+
+# v2.5.1
+db_hsqldb:
+  2_4:
+    version: 2.4.1
+    hash_file: sha256:417294fff9d6b6a4f7ee522982ed2693cdda28d131da0d9e4f048a57d6e1cdb2
+    tool_hash_file: sha256:a03fb31971064fe66655ce0ebe0902fca5e9d2cbe7295f953e29e79e8a77843c
+  2_5:
+    version: 2.5.1
+    hash_file: sha256:a08bbe1187cf725b721a536ecc3cb825317a883616d6c4ef25d564a70ad83202
+    tool_hash_file: sha256:ee58c60028f6094ad1b44d3f5808e4c87d75ee29545257f99a4daa4500371c9d
+  last:
+    version: 2.5.1
+    hash_file: sha256:a08bbe1187cf725b721a536ecc3cb825317a883616d6c4ef25d564a70ad83202
+    tool_hash_file: sha256:ee58c60028f6094ad1b44d3f5808e4c87d75ee29545257f99a4daa4500371c9d
+
 db_hsqldb_file: 'http://www.hsqldb.org/repos/org/hsqldb/hsqldb/{{ db_hsqldb_version }}/hsqldb-{{ db_hsqldb_version }}.jar'
-db_hsqldb_hash_file: sha256:a08bbe1187cf725b721a536ecc3cb825317a883616d6c4ef25d564a70ad83202
 db_hsqldb_tool_file: 'http://www.hsqldb.org/repos/org/hsqldb/sqltool/{{ db_hsqldb_version }}/sqltool-{{ db_hsqldb_version }}.jar'
-db_hsqldb_tool_hash_file: sha256:ee58c60028f6094ad1b44d3f5808e4c87d75ee29545257f99a4daa4500371c9d
 
 # Pod version
-pod_version: 1.5.1
+pod_version: 1.5.2
 jar_file: 'https://github.com/sumaris-net/sumaris-pod/releases/download/{{ pod_version }}/sumaris-pod-{{ pod_version }}.war'
-jar_hash_file: sha256:e34135ab34c8226dc836869d22ea69a6e3dee7d9e13e40fe882b319fbba88ac8
+jar_hash_file: sha256:d26ea5187e4d01ae01e5727333be296a5b6fc684507ada81cd6e5f53cbc08aa2
 
 # DB data version
-db_version: 1.5.1
+db_version: 1.5.2
 db_file: 'https://github.com/sumaris-net/sumaris-pod/releases/download/{{ db_version }}/sumaris-db-{{ db_version }}.zip'
-db_hash_file: sha256:41525bc7deb51303fcfc6c60800cf44c113971715b8ee8ac0af0b09aeef466b2
+db_hash_file: sha256:0a8ab8edcb52315b1bf99fde3c7445d16b178e0c19a2b6079c5ceba8043508c9
 
 # App web version
-app_version: 1.5.3
+app_version: 1.5.4
 app_file: 'https://github.com/sumaris-net/sumaris-app/releases/download/{{ app_version }}/sumaris-app-{{ app_version }}-web.zip'
-app_hash_file: sha256:d54cb3d7cab94e0abe09ca3a9622481ebac180558a38da3b5cb50647b252e9b9
+app_hash_file: sha256:ba624690845ed96d44c3a9a1251814027eaac0bc7905271a348a3e58b3e31866
 
 # App Android version
-apk_version: 1.5.3
+apk_version: 1.5.4
 apk_basename: 'sumaris-app-{{ apk_version }}-android.apk'
 apk_file: 'https://github.com/sumaris-net/sumaris-app/releases/download/{{ apk_version }}/{{ apk_basename }}'
-apk_hash_file: sha256:61dcd36dfe51c70bf560a0986184d5e728ac7a6e6204b4bec938bfc85693a13d
+apk_hash_file: sha256:5c8ef2f6a02ac0a617396346af221d3e3e6a8fa22318eee90df8c15d6232a9d0
