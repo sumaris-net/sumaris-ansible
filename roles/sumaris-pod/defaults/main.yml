@@ -22,9 +22,11 @@ db_backup_ftp_url: ''
 db_backup_ftp_dir: '/sumaris-db-{{ username }}-backup/'
 db_backup: true
 db_jvm_opts: '-Xms512m -Xmx1024m'
-db_hsqldb_version: '{{ db_hsqldb.last.version }}'
-db_hsqldb_hash_file: '{{ db_hsqldb.last.hash_file }}'
-db_hsqldb_tool_hash_file: '{{ db_hsqldb.last.tool_hash_file }}'
+
+# Use HsqlDB v2.4.1 by default, because error on 2.5, on "grouping" table (becomes a reserved word)
+db_hsqldb_version: '{{ db_hsqldb.default.version }}'
+db_hsqldb_hash_file: '{{ db_hsqldb.default.hash_file }}'
+db_hsqldb_tool_hash_file: '{{ db_hsqldb.default.tool_hash_file }}'
 
 app_name: SUMARiS
 app_default_peer: true

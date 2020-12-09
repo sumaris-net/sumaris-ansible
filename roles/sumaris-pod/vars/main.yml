@@ -10,6 +10,10 @@ db_hsqldb:
     version: 2.5.1
     hash_file: sha256:a08bbe1187cf725b721a536ecc3cb825317a883616d6c4ef25d564a70ad83202
     tool_hash_file: sha256:ee58c60028f6094ad1b44d3f5808e4c87d75ee29545257f99a4daa4500371c9d
+  default:
+    version: 2.4.1
+    hash_file: sha256:417294fff9d6b6a4f7ee522982ed2693cdda28d131da0d9e4f048a57d6e1cdb2
+    tool_hash_file: sha256:a03fb31971064fe66655ce0ebe0902fca5e9d2cbe7295f953e29e79e8a77843c
   last:
     version: 2.5.1
     hash_file: sha256:a08bbe1187cf725b721a536ecc3cb825317a883616d6c4ef25d564a70ad83202
@@ -19,22 +23,22 @@ db_hsqldb_file: 'http://www.hsqldb.org/repos/org/hsqldb/hsqldb/{{ db_hsqldb_vers
 db_hsqldb_tool_file: 'http://www.hsqldb.org/repos/org/hsqldb/sqltool/{{ db_hsqldb_version }}/sqltool-{{ db_hsqldb_version }}.jar'
 
 # Pod version
-pod_version: 1.6.0
+pod_version: 1.6.4
 jar_file: 'https://github.com/sumaris-net/sumaris-pod/releases/download/{{ pod_version }}/sumaris-pod-{{ pod_version }}.war'
-jar_hash_file: sha256:8cd22c3434862611c55283d5cd2bcbbf0a87cf4a27efe4b759fb4b75532b282b
+jar_hash_file: sha256:66a4e0d05ce43eb0dffb1d46bf3daa04dbb885c64d6808522ae6a038321da548
 
 # DB data version
-db_version: 1.6.0
+db_version: 1.6.4
 db_file: 'https://github.com/sumaris-net/sumaris-pod/releases/download/{{ db_version }}/sumaris-db-{{ db_version }}.zip'
-db_hash_file: sha256:dcee5cf74d4f4ae2c0ba5c00a54ca59e7c10de659ea543275ff9cbf36261abdd
+db_hash_file: sha256:3f248ae374b265a3a40460f6d88ecd1313921dc18e02d7fa90295dab1f8e4395
 
 # App web version
-app_version: 1.6.0
+app_version: 1.6.4
 app_file: 'https://github.com/sumaris-net/sumaris-app/releases/download/{{ app_version }}/sumaris-app-{{ app_version }}-web.zip'
-app_hash_file: sha256:0ec9118d081cc8d7c7a2f1959f6d445f1846d2e57740ea5bdde289bd3182fc47
+app_hash_file: sha256:5474a373e9c8da0d79f096f4ce468df1aa68e48a86dd0d69f29387428fb34ad2
 
 # App Android version
-apk_version: 1.6.0
+apk_version: 1.6.4
 apk_basename: 'sumaris-app-{{ apk_version }}-android.apk'
 apk_file: 'https://github.com/sumaris-net/sumaris-app/releases/download/{{ apk_version }}/{{ apk_basename }}'
-apk_hash_file: sha256:b3fe0dcc7bf3eabff1a89213cecf62eebe2545957ead8348c9e93557986ad82e
+apk_hash_file: sha256:51a2812094ba88fe03d6b7931ff3d34e3ebe88fd107000297203db9cfe5156b3
