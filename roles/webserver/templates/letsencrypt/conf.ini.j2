@@ -4,7 +4,7 @@ domains = {{ hostvars[inventory_hostname].default_domain }}
 rsa-key-size = 4096
  
 # the current closed beta (as of 2015-Nov-07) is using this server
-#server = https://acme-v01.api.letsencrypt.org/directory
+server = https://acme-v02.api.letsencrypt.org/directory
  
 # this address will receive renewal reminders
 email = {{ admin_email }}
@@ -15,4 +15,4 @@ text = True
 # authenticate by placing a file in the webroot (under .well-known/acme-challenge/) 
 # and then letting LE fetch it
 authenticator = webroot
-webroot-path = /var/www/letsencrypt
+webroot-path = /var/www/letsencrypt/

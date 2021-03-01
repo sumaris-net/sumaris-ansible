@@ -33,9 +33,9 @@
   include_tasks: centos_packages.yml    
   when: ansible_distribution == "CentOS"
 
-- name: Download and configure packages on Debian
-  include_tasks: debian_packages.yml    
-  when: ansible_distribution == "Debian"
+- name: Download and configure packages on debian
+  include_tasks: debian_packages.yml
+  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
 
 - name: Configure jail
   include_tasks: jail.yml

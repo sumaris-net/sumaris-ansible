@@ -1,5 +1,5 @@
 
-- name: Authorize local connexions (ipv4)
+- name: Authorize INPUT local connexions (ipv4)
   iptables:
     ip_version: ipv4
     chain: INPUT
@@ -7,13 +7,30 @@
     destination: localhost
     jump: ACCEPT
 
-- name: Authorize local connexions (ipv4)
+- name: Authorize INPUT local connexions (ipv4)
   iptables:
     ip_version: ipv4
     chain: INPUT
     protocol: tcp
-    destination: 127.0.1.1
+    destination: 127.0.0.1
     jump: ACCEPT
+
+- name: Get existing iptables rules
+  become: true
+  command: iptables -n -L
+  changed_when: false
+  register: iptables_rules
+
+- name: Create f2b-sshd iptables chain
+  become: true
+  command: iptables -N 'f2b-sshd'
+  when: "'Chain f2b-sshd' not in iptables_rules.stdout"
+
+- name: Configure chain f2b-sshd
+  iptables:
+    chain: f2b-sshd
+    protocol: all
+    jump: RETURN
 
 - name: Filter ansible port with fail2ban (ipv4)
   iptables:
@@ -36,14 +53,14 @@
   iptables:
     ip_version: ipv4
     chain: INPUT
-    ctstate: ESTABLISHED,RELATED
+    ctstate: "{{ iptables_ctstate }}"
     jump: ACCEPT
 
 - name: Allow related and established connections
   iptables:
     ip_version: ipv6
     chain: INPUT
-    ctstate: ESTABLISHED,RELATED
+    ctstate: ESTABLISHED,RELATED,NEW
     jump: ACCEPT
 
 - name: Set the policy for the INPUT chain to DROP (ipv4)
@@ -57,6 +74,20 @@
     ip_version: ipv6
     chain: INPUT
     policy: DROP
+
+- name: Authorize OUTPUT TCP connexions (ipv4)
+  iptables:
+    ip_version: ipv4
+    chain: OUTPUT
+    protocol: tcp
+    jump: ACCEPT
+
+- name: Authorize OUTPUT TCP connexions (ipv6)
+  iptables:
+    ip_version: ipv6
+    chain: OUTPUT
+    protocol: tcp
+    jump: ACCEPT
 
 - name: Save the rules ipv4
   shell: iptables-save > /etc/iptables/rules.v4

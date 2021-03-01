@@ -1,4 +1,11 @@
+- name: Check if UFW installed
+  become: true
+  command: apt list --installed ufw
+  changed_when: false
+  register: apt_list_installed_ufw
+
 - name: Disable UFW
   command: ufw disable
   register: ufw_disabled
   changed_when: false
+  when: "'ufw/' in apt_list_installed_ufw.stdout"

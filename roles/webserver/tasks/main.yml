@@ -109,7 +109,7 @@
     path: /etc/nginx/includes
     state: directory
 
-- name: Nginx Add letsencrypt include
+- name: Nginx Add Let’s Encrypt include
   template:
     src: includes/letsencrypt.conf.j2
     dest: /etc/nginx/includes/letsencrypt.conf
@@ -134,7 +134,7 @@
   notify: Restart nginx
   when: nginx_default_server
 
-- name: DB {{ username }} - Remove default conf (default_server)
+- name: Nginx - Remove default conf (default_server)
   file:
     path: "{{ item }}"
     state: absent
