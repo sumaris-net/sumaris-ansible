@@ -5,7 +5,7 @@ pod_salt: '{{ username }}@{{ sumaris_host }}'
 pod_password: '{{ username }}'
 pod_address: '127.0.0.1'
 pod_port: 8081
-pod_jvm_opts: '-Xms512m -Xmx1024m'
+pod_jvm_opts: '-Xms2g -Xmx2g'
 
 # Pod features config
 pod_rdf_enabled: false
