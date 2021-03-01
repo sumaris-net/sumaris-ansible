@@ -1,9 +1,25 @@
 - name: Pod {{ username }} - Update repositories cache and install required packages
   apt:
     cache_valid_time: 3600
-    pkg: ["openjdk-8-jre", "libsodium18", "unzip", "lftp"]
+    pkg: ["openjdk-8-jre", "unzip", "lftp"]
     update_cache: yes
     state: present
+
+- name: Pod {{ username }} - Update repositories cache and install libsodium
+  apt:
+    cache_valid_time: 3600
+    pkg: ["libsodium18"]
+    update_cache: yes
+    state: present
+  when: not ansible_distribution == "Ubuntu"
+
+- name: Pod {{ username }} - Update repositories cache and install libsodium
+  apt:
+    cache_valid_time: 3600
+    pkg: ["libsodium23"]
+    update_cache: yes
+    state: present
+  when: ansible_distribution == "Ubuntu"
 
 - name: Pod {{ username }} - Create {{ username}} user
   user:

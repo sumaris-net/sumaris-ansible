@@ -32,11 +32,14 @@ JAVA_OPTS="$JAVA_OPTS -Dsumaris.log.file=${SUMARIS_LOG}"
 JAVA_OPTS="$JAVA_OPTS -Dspring.config.additional-location=/opt/{{ username }}/{{ target_dir }}/config/"
 JAVA_OPTS="$JAVA_OPTS -Dspring.profiles.active={{ db_type }}"
 JAVA_OPTS="$JAVA_OPTS -Dspring.liquibase.enabled=true"
+JAVA_OPTS="$JAVA_OPTS -Dspring.activemq.pool.enabled=true"
+JAVA_OPTS="$JAVA_OPTS -Dspring.activemq.broker-url=vm://embedded?broker.persistent=true"
 JAVA_CMD="java -server $JAVA_OPTS -jar $JAR_FILE $SUMARIS_HOME"
 
 start() {
   echo "Starting $SERVICE_NAME..."
   echo " - JAVA_OPTS: $JAVA_OPTS"
+  echo " - Full command: $JAVA_CMD"
   echo " - log: $SUMARIS_LOG"
 
   cd $SUMARIS_HOME

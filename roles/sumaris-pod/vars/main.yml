@@ -23,14 +23,14 @@ db_hsqldb_file: 'http://www.hsqldb.org/repos/org/hsqldb/hsqldb/{{ db_hsqldb_vers
 db_hsqldb_tool_file: 'http://www.hsqldb.org/repos/org/hsqldb/sqltool/{{ db_hsqldb_version }}/sqltool-{{ db_hsqldb_version }}.jar'
 
 # Pod version
-pod_version: 1.7.1
+pod_version: 1.7.2
 jar_file: 'https://github.com/sumaris-net/sumaris-pod/releases/download/{{ pod_version }}/sumaris-pod-{{ pod_version }}.war'
-jar_hash_file: sha256:bb70dcea44077e9e55553fe46badfe42b52feb81bfb86999fd67af42e441dacf
+jar_hash_file: sha256:82796f9b88b31c9ecf62ddab55d240e8e41aad941605096d5f5fe1ec231b5c72
 
 # DB data version
-db_version: 1.7.1
+db_version: 1.7.2
 db_file: 'https://github.com/sumaris-net/sumaris-pod/releases/download/{{ db_version }}/sumaris-db-{{ db_version }}.zip'
-db_hash_file: sha256:4cc115b36d92c6a09ffc2409e2bb3bbe67b278b4da46720e6b09d4966cb74132
+db_hash_file: sha256:9150263cf4b22119660c79661618f5a195ac6317561496070869b5fdcd32016f
 
 # App web version
 app_version: 1.7.0
