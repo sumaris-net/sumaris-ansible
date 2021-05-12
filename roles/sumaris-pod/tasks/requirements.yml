@@ -11,7 +11,7 @@
     pkg: ["libsodium18"]
     update_cache: yes
     state: present
-  when: not ansible_distribution == "Ubuntu"
+  when: not ansible_distribution == "Ubuntu" or ansible_distribution_major_version == "16"
 
 - name: Pod {{ username }} - Update repositories cache and install libsodium
   apt:
@@ -19,7 +19,7 @@
     pkg: ["libsodium23"]
     update_cache: yes
     state: present
-  when: ansible_distribution == "Ubuntu"
+  when: ansible_distribution == "Ubuntu" and not ansible_distribution_major_version == "16"
 
 - name: Pod {{ username }} - Create {{ username}} user
   user:
