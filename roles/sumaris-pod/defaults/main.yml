@@ -31,6 +31,9 @@ db_hsqldb_tool_hash_file: '{{ db_hsqldb.default.tool_hash_file }}'
 app_name: SUMARiS
 app_default_peer: true
 app_base_path: ''
+app_query_timeout: 30000
+app_query_hibernate_timeout: 30
+app_extraction_query_timeout: 300000
 
 apk_dir: '/opt/{{ username }}/{{ target_dir }}/data/download/android'
 apk_latest_basename: 'sumaris-app-latest.apk'

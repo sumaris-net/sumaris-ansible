@@ -34,6 +34,9 @@ JAVA_OPTS="$JAVA_OPTS -Dspring.profiles.active=default,{{ db_type }}"
 JAVA_OPTS="$JAVA_OPTS -Dspring.liquibase.enabled=true"
 JAVA_OPTS="$JAVA_OPTS -Dspring.activemq.pool.enabled=true"
 JAVA_OPTS="$JAVA_OPTS -Dspring.activemq.broker-url=vm://embedded?broker.persistent=true"
+JAVA_OPTS="$JAVA_OPTS -Dsumaris.extraction.query.timeout={{ app_extraction_query_timeout }}"
+JAVA_OPTS="$JAVA_OPTS -Dspring.jpa.properties.javax.persistence.query.timeout={{ app_query_timeout }}"
+JAVA_OPTS="$JAVA_OPTS -Dspring.jpa.properties.org.hibernate.timeout={{ app_query_hibernate_timeout }}"
 JAVA_CMD="java -server $JAVA_OPTS -jar $JAR_FILE $SUMARIS_HOME"
 
 start() {
