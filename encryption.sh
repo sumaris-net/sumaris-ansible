@@ -112,12 +112,18 @@ commit() {
 
 fetch() {
   cd ${BASEDIR} || exit 1
-  # Save current changes to the user branch
-  check_user_branch && commit;
+
+  # Get remote changes
+  echo "--- Fetching remote changes..."
+  git fetch origin || exit 1
+  echo "--- Fetching remote changes [OK]"
 
   # Remove merge branches
   git branch -d merge/local
   git branch -d merge/remote
+
+  # Save current changes to the user branch
+  commit;
 
   # Switch to merge/local branch, then commit decrypted files
   git switch -c merge/local || exit 1
@@ -125,11 +131,6 @@ fetch() {
   check_merge_branch
   git add -A
   git commit --no-verify -m 'merge/local'
-
-  # Get remote changes
-  echo "--- Fetching remote changes..."
-  git fetch origin || exit 1
-  echo "--- Fetching remote changes [OK]"
 
   # Checkout origin/master into merge/remote
   git checkout origin/master || exit 1
