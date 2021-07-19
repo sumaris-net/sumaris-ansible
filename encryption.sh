@@ -88,9 +88,9 @@ commit() {
   # Encrypt
   OK=$(encrypt)
   if [[ $? -ne 0 ]]; then
-    echo "Encryption failed. Checking all files encrypted..."
     OK=$(check_encrypted)
     [[ $? -ne 0 ]] && exit 1
+    echo "Encryption failed, but all files are encrypted. Continue..."
   fi
   # Add all files
   echo "Adding missing file to git..."
