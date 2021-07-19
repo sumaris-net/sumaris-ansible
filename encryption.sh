@@ -106,7 +106,7 @@ commit() {
   # Commit
   echo ""
   echo "--- Committing to ${GIT_BRANCH}..."
-  git commit --no-verify -m ''"$GIT_MESSAGE"'' || exit 1
+  git commit --no-verify -m ''"$GIT_MESSAGE"''
   echo "--- Committing to ${GIT_BRANCH} [OK]"
 }
 
