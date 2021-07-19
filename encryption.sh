@@ -87,12 +87,12 @@ commit() {
   echo "Commit with message: '$GIT_MESSAGE'"
   # Encrypt
   ENCRYPT=$(encrypt)
-  echo "$ENCRYPT"
-  if [[ ! $ENCRYPT ]]; then
-    echo "WARN"
-     check_encrypted || exit 1
+  if [[ $? -ne 0 ]]; then
+    echo "Encryption failed. Checking all files encrypted..."
+    check_encrypted || exit 1
   fi
   # Add all files
+  echo "Adding missing file to git..."
   git add -A || exit 1
   # Commit
   git commit --no-verify -m ''"$GIT_MESSAGE"'' || exit 1
