@@ -115,16 +115,16 @@ fetch() {
   # Save current changes to the user branch
   check_user_branch && commit;
 
+  # Remove merge branches
+  git branch -d merge/local
+  git branch -d merge/remote
+
   # Switch to merge/local branch, then commit decrypted files
   git switch -c merge/local || exit 1
   decrypt
   check_merge_branch
   git add -A
   git commit --no-verify -m 'merge/local'
-
-  # Remove merge branches
-  git branch -d merge/local
-  git branch -d merge/remote
 
   # Get remote changes
   echo "--- Fetching remote changes..."
