@@ -15,6 +15,7 @@ TARGET_FILES_PATTERN="host_vars/.*\.yml|playbook/.*\.yml|hosts\.yml|ssh\.cfg"
 
 COMMAND=$1
 GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+GIT_MESSAGE=$2
 
 usage() {
   echo "Usage: $0 <command> <options>"
@@ -83,16 +84,16 @@ check_encrypted() {
 
 commit() {
   cd "${BASEDIR}" || exit 1
-  GIT_MESSAGE=$2
+  echo "Commit with message: '$GIT_MESSAGE'"
   # Encrypt
-  #ENCRYPT=$(encrypt)
-  #if [[ ! $ENCRYPT ]]; then
-  #  check_encrypted || exit 1
-  #fi
+  ENCRYPT=$(encrypt)
+  if [[ ! $ENCRYPT ]]; then
+    check_encrypted || exit 1
+  fi
   # Add all files
   git add -A || exit 1
   # Commit
-  git commit -m ''"$GIT_MESSAGE"'' || exit 1
+  git commit --no-verify -m ''"$GIT_MESSAGE"'' || exit 1
   echo "-- Successfully committed to ${GIT_BRANCH}"
 }
 
