@@ -102,8 +102,9 @@ commit() {
   echo "Adding missing file to git [OK]"
 
   # Commit
+  echo "Committing to ${GIT_BRANCH}..."
   git commit --no-verify -m ''"$GIT_MESSAGE"'' || exit 1
-  echo "-- Successfully committed to ${GIT_BRANCH}"
+  echo "Committing to ${GIT_BRANCH} [OK]"
 }
 
 push() {
