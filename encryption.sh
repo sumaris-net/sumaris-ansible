@@ -121,7 +121,7 @@ fetch() {
   echo "--- Fetching remote changes [OK]"
 
   git checkout origin/master || exit 1
-  git switch temporary || exit 1
+  git switch -c temporary || exit 1
   decrypt
   git merge "${GIT_BRANCH}" || exit 1
 }
