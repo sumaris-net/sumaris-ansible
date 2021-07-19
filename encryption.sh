@@ -111,18 +111,35 @@ commit() {
 }
 
 fetch() {
-  cd ${BASEDIR}
-  # Commit changes to a local branch
-  check_user_branch && commit
+  cd ${BASEDIR} || exit 1
+  # Save current changes to the user branch
+  check_user_branch && commit;
+
+  # Switch to merge/local branch, then commit decrypted files
+  git switch -c merge/local || exit 1
+  decrypt
+  check_merge_branch
+  git add -A || exit 1
+  git commit --no-verify -m 'merge/local' || exit 1
+
+  # Remove merge branches
+  git branch -d merge/local
+  git branch -d merge/remote
 
   # Get remote changes
   echo "--- Fetching remote changes..."
   git fetch origin || exit 1
   echo "--- Fetching remote changes [OK]"
 
+  # Checkout origin/master into merge/remote
   git checkout origin/master || exit 1
   git switch -c temporary || exit 1
   decrypt
+  check_merge_branch
+  git commit --no-verify -m 'merge/remote' || exit 1
+  git add -A || exit 1
+
+  # Merge branches
   git merge "${GIT_BRANCH}" || exit 1
 }
 
@@ -154,6 +171,17 @@ check_user_branch() {
     exit 1
   fi
 }
+
+check_merge_branch() {
+  cd ${BASEDIR}
+  echo "GIT branch: $GIT_BRANCH"
+  if [[ ! "$GIT_BRANCH" =~ ^merge/[a-zA-Z0-9]+$ ]];
+  then
+    echo ">> The command '$COMMAND' must be run under a users/*** branch"
+    exit 1
+  fi
+}
+
 
 case "$COMMAND" in
 encrypt)
