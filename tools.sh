@@ -110,16 +110,24 @@ commit() {
   echo "--- Committing to ${GIT_BRANCH} [OK]"
 }
 
-fetch() {
+
+fetch_origin() {
+  cd "${BASEDIR}" || exit 1
+
+  # Get remote changes
+  echo "--- Fetching remote changes..."
+  git fetch origin || exit 1
+  echo "--- Fetching remote changes [OK]"
+}
+
+merge() {
   cd "${BASEDIR}" || exit 1
 
   # Save current changes to the user branch
   commit;
 
   # Get remote changes
-  echo "--- Fetching remote changes..."
-  git fetch origin || exit 1
-  echo "--- Fetching remote changes [OK]"
+  fetch_origin
 
   # Checkout origin/master into merge/remote
   git checkout origin/master || exit 1
@@ -138,8 +146,13 @@ fetch() {
 
 push() {
   cd "${BASEDIR}" || exit 1
-  check_master_branch
-  echo "Pushing changes to master..."
+  check_user_branch
+  fetch_origin
+
+  echo "-- Merging $GIT_BRANCH to master..."
+  git checkout origin/master || exit 1
+  git merge "$GIT_BRANCH" || exit 1
+  git push
 }
 
 ### Control that the script is run on `master` branch
@@ -205,8 +218,8 @@ commit)
   commit
 ;;
 
-fetch)
-  fetch
+merge)
+  merge
 ;;
 
 push)
