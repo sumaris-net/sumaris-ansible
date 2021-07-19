@@ -112,12 +112,16 @@ commit() {
 
 fetch() {
   cd ${BASEDIR}
-  check_user_branch
-  commit
+  # Commit changes to a local branch
+  check_user_branch && commit
 
+  # Get remote changes
   echo "--- Fetching remote changes..."
   git fetch origin || exit 1
   echo "--- Fetching remote changes [OK]"
+
+  git checkout origin/master || exit 1
+  decrypt
 }
 
 push() {
