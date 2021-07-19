@@ -1,0 +1,8 @@
+server {
+    listen 80 default_server;
+    server_name {{ hostvars[inventory_hostname].default_domain }};
+ 
+    location /.well-known/acme-challenge {
+        root /var/www/letsencrypt;
+    }
+}

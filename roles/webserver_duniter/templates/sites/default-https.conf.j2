@@ -1,0 +1,10 @@
+
+server {
+    listen 443 ssl default_server;
+    
+    ssl_certificate /etc/letsencrypt/live/{{ hostvars[inventory_hostname].default_domain }}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{ hostvars[inventory_hostname].default_domain }}/privkey.pem;
+    
+    return 301 $scheme://duniter.org$request_uri;
+
+}

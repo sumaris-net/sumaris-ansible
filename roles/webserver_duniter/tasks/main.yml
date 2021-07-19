@@ -1,0 +1,100 @@
+- include_role:
+    name: nginxinc.nginx
+
+- name: Install letsencrypt
+  apt:
+    pkg: 
+     - letsencrypt
+     - python3-certbot-nginx
+    state: present
+
+- name: Creates directory /etc/letsencrypt/configs
+  file: 
+    path: /etc/letsencrypt/configs
+    state: directory
+
+- name: Creates directory /var/www/letsencrypt
+  file: 
+    path: /var/www/letsencrypt
+    state: directory
+    group: www-data
+
+- name: Authorize HTTP port (ipv4)
+  iptables:
+    ip_version: ipv4
+    chain: INPUT
+    protocol: tcp
+    destination_port: 80
+    jump: ACCEPT
+
+- name: Authorize HTTP port (ipv6)
+  iptables:
+    ip_version: ipv6
+    chain: INPUT
+    protocol: tcp
+    destination_port: 80
+    jump: ACCEPT
+
+- name: Authorize HTTPS port (ipv4)
+  iptables:
+    ip_version: ipv4
+    chain: INPUT
+    protocol: tcp
+    destination_port: 443
+    jump: ACCEPT
+
+- name: Authorize HTTPS port (ipv6)
+  iptables:
+    ip_version: ipv6
+    chain: INPUT
+    protocol: tcp
+    destination_port: 443
+    jump: ACCEPT
+
+- name: Save the rules ipv4
+  shell: iptables-save > /etc/iptables/rules.v4
+  
+- name: Save the rules ipv6
+  shell: ip6tables-save > /etc/iptables/rules.v6
+
+- name: Generate letsencrypt configuration
+  template:
+    src: letsencrypt/conf.ini.j2
+    dest: /etc/letsencrypt/configs/{{ hostvars[inventory_hostname].default_domain }}.ini
+  notify: Nginx HTTP
+
+- name: Nginx HTTP
+  template:
+    src: sites/default-http.conf.j2
+    dest: /etc/nginx/conf.d/default-http.conf
+  notify: Restart nginx
+
+- meta: flush_handlers
+
+- name: Cert bot
+  command: certbot --agree-tos --config /etc/letsencrypt/configs/{{ hostvars[inventory_hostname].default_domain }}.ini certonly
+  args:
+    creates: /etc/letsencrypt/live/{{ hostvars[inventory_hostname].default_domain }}/cert.pem
+
+- name: Nginx server tokens
+  template:
+    src: sites/security.conf.j2
+    dest: /etc/nginx/conf.d/security.conf
+  notify: Restart nginx
+
+- name: Nginx HTTPS
+  template:
+    src: sites/default-https.conf.j2
+    dest: /etc/nginx/conf.d/default-https.conf
+  notify: Restart nginx
+
+- name: Nginx create includes folder
+  file:
+    path: /etc/nginx/includes
+    state: directory
+
+- name: Nginx Add Let’s Encrypt include
+  template:
+    src: letsencrypt/letsencrypt.conf.j2
+    dest: /etc/nginx/includes/letsencrypt.conf
+  notify: Restart nginx
