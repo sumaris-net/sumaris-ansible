@@ -84,9 +84,10 @@ check_encrypted() {
 
 commit() {
   cd "${BASEDIR}" || exit 1
+  check_user_branch
+
   if [[ "_$GIT_MESSAGE" = "_" ]]; then
-    echo "ERROR: missing 'message' argument"
-    exit 1
+    GIT_MESSAGE="Temporary commit"
   fi
   # Encrypt
   OK=$(encrypt)
@@ -109,20 +110,41 @@ commit() {
   echo "--- Committing to ${GIT_BRANCH} [OK]"
 }
 
+fetch() {
+  cd ${BASEDIR}
+  check_user_branch
+  commit
+
+  echo "--- Fetching remote changes..."
+  git fetch origin || exit 1
+  echo "--- Fetching remote changes [OK]"
+}
+
 push() {
   cd ${BASEDIR}
-  check_master
+  check_master_branch
   echo "Pushing changes to master..."
-
 }
 
 ### Control that the script is run on `master` branch
-check_master() {
+check_master_branch() {
   cd ${BASEDIR}
   echo "GIT branch: $GIT_BRANCH"
   if [[ ! "$GIT_BRANCH" = "master" ]];
   then
-    echo ">> This script must be run under a master branch"
+    echo ">> The command '$COMMAND' must be run under the master branch"
+    exit 1
+  fi
+}
+
+
+### Control that the script is run on `master` branch
+check_user_branch() {
+  cd ${BASEDIR}
+  echo "GIT branch: $GIT_BRANCH"
+  if [[ ! "$GIT_BRANCH" =~ ^users/[a-zA-Z0-9]+$ ]];
+  then
+    echo ">> The command '$COMMAND' must be run under a users/*** branch"
     exit 1
   fi
 }
