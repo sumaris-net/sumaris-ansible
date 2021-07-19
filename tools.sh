@@ -159,6 +159,9 @@ release() {
   git merge "$GIT_BRANCH" || exit 1
   git push
   echo "-- Merging $GIT_BRANCH to master [OK]"
+
+  # Re open the local users/** branch
+  git checkout $GIT_BRANCH
 }
 
 ### Control that the script is run on `master` branch
@@ -200,20 +203,20 @@ check_merge_branch() {
 
 case "$COMMAND" in
 encrypt)
-    encrypt
+  encrypt
 ;;
 decrypt)
   decrypt
 ;;
 encrypt_ssh)
-    cd ${BASEDIR}
-    echo "Encrypt ${SSH_CFG_FILE}..."
-    ansible-vault encrypt --vault-password-file ${VAUL_PASSWORD_FILE} ${SSH_CFG_FILE}
+  cd "${BASEDIR}" || exit 1
+  echo "Encrypt ${SSH_CFG_FILE}..."
+  ansible-vault encrypt --vault-password-file ${VAUL_PASSWORD_FILE} ${SSH_CFG_FILE}
 ;;
 decrypt_ssh)
-    cd ${BASEDIR}
-    echo "Decrypt ${SSH_CFG_FILE}..."
-    ansible-vault decrypt --vault-password-file ${VAUL_PASSWORD_FILE} ${SSH_CFG_FILE}
+  cd "${BASEDIR}" || exit 1
+  echo "Decrypt ${SSH_CFG_FILE}..."
+  ansible-vault decrypt --vault-password-file ${VAUL_PASSWORD_FILE} ${SSH_CFG_FILE}
 ;;
 check)
   echo "Check encryption ${TARGET_FILES}..."
