@@ -87,8 +87,10 @@ commit() {
   echo "Commit with message: '$GIT_MESSAGE'"
   # Encrypt
   ENCRYPT=$(encrypt)
+  echo "$ENCRYPT"
   if [[ ! $ENCRYPT ]]; then
-    check_encrypted || exit 1
+    echo "WARN"
+     check_encrypted || exit 1
   fi
   # Add all files
   git add -A || exit 1
