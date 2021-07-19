@@ -157,14 +157,19 @@ release() {
   # fetch origin
   fetch_origin
 
+  # delete merge branch
+  git branch -d merge/remote
+
   echo "-- Merging $GIT_BRANCH to master..."
   git checkout origin/master || exit 1
+  git checkout master || exit 1
   git merge "$GIT_BRANCH" || exit 1
   git push
   echo "-- Merging $GIT_BRANCH to master [OK]"
 
   # Re open the local users/** branch
   git checkout $GIT_BRANCH
+  decrypt
 }
 
 ### Control that the script is run on `master` branch
