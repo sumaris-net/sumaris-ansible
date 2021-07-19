@@ -108,6 +108,9 @@ commit() {
   echo "--- Committing to ${GIT_BRANCH}..."
   git commit --no-verify -m ''"$GIT_MESSAGE"''
   echo "--- Committing to ${GIT_BRANCH} [OK]"
+
+  # Decrypt
+  decrypt
 }
 
 
