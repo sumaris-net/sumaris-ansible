@@ -111,48 +111,43 @@ commit() {
 }
 
 fetch() {
-  cd ${BASEDIR} || exit 1
+  cd "${BASEDIR}" || exit 1
+
+  # Save current changes to the user branch
+  commit;
 
   # Get remote changes
   echo "--- Fetching remote changes..."
   git fetch origin || exit 1
   echo "--- Fetching remote changes [OK]"
 
-  # Remove merge branches
-  git branch -d merge/local
-  git branch -d merge/remote
-
-  # Save current changes to the user branch
-  commit;
-
-  # Switch to merge/local branch, then commit decrypted files
-  git switch -c merge/local || exit 1
-  decrypt
-  git add -A
-  git commit --no-verify -m 'merge/local'
-
   # Checkout origin/master into merge/remote
   git checkout origin/master || exit 1
+  git branch -d merge/remote
   git switch -c merge/remote || exit 1
   decrypt
-  git commit --no-verify -m 'merge/remote' || exit 1
   git add -A || exit 1
+  git commit --no-verify -m 'merge/remote' || exit 1
 
-  # Merge branches
-  git merge merge/local || exit 1
+  # Checkout users/***
+  git checkout $GIT_BRANCH || exit 1
+  decrypt
+  echo "-- Successfully pull changes, into merge/remote"
+  git merge merge/remote || exit 1
 }
 
 push() {
-  cd ${BASEDIR} || exit 1
+  cd "${BASEDIR}" || exit 1
   check_master_branch
   echo "Pushing changes to master..."
 }
 
 ### Control that the script is run on `master` branch
 check_master_branch() {
-  cd ${BASEDIR}
-  echo "GIT branch: $GIT_BRANCH"
-  if [[ ! "$GIT_BRANCH" = "master" ]];
+  cd "${BASEDIR}" || exit 1
+  CHECKED_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+  echo "GIT branch: $CHECKED_BRANCH"
+  if [[ ! "$CHECKED_BRANCH" = "master" ]];
   then
     echo ">> The command '$COMMAND' must be run under the master branch"
     exit 1
@@ -162,9 +157,10 @@ check_master_branch() {
 
 ### Control that the script is run on `master` branch
 check_user_branch() {
-  cd ${BASEDIR}
-  echo "GIT branch: $GIT_BRANCH"
-  if [[ ! "$GIT_BRANCH" =~ ^users/[a-zA-Z0-9]+$ ]];
+  cd "${BASEDIR}" || exit 1
+  CHECKED_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+  echo "GIT branch: $CHECKED_BRANCH"
+  if [[ ! "$CHECKED_BRANCH" =~ ^users/[a-zA-Z0-9]+$ ]];
   then
     echo ">> The command '$COMMAND' must be run under a users/*** branch"
     exit 1
@@ -172,9 +168,10 @@ check_user_branch() {
 }
 
 check_merge_branch() {
-  cd ${BASEDIR}
-  echo "GIT branch: $GIT_BRANCH"
-  if [[ ! "$GIT_BRANCH" =~ ^merge/[a-z]+$ ]];
+  cd "${BASEDIR}" || exit 1
+  CHECKED_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+  echo "GIT branch: $CHECKED_BRANCH"
+  if [[ ! "$CHECKED_BRANCH" =~ ^merge/[a-z]+$ ]];
   then
     echo ">> The command '$COMMAND' must be run under a merge/*** branch"
     exit 1
