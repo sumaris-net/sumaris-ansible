@@ -24,7 +24,8 @@ usage() {
     echo " - encrypt:             Encrypt vault files"
     echo " - decrypt:             Decrypt vault files"
     echo " - commit <comments>:   Encrypt vault files, then commit changes"
-    echo " - fetch:               Fetch remote changes, then decrypt vault files"
+    echo " - merge:               Create a local branch 'merge/remote', to be able to compare"
+    echo " - release:             Merge local branch 'users/***' into master, then push"
     echo ""
     echo " Other available commands:"
     echo "  - check:          Make sure vault file are encrypted, and exit with an error code if not"
@@ -144,7 +145,9 @@ merge() {
   git checkout $GIT_BRANCH || exit 1
   decrypt
   echo "-- Successfully pull changes, into merge/remote"
-  git merge merge/remote || exit 1
+  git merge merge/remote
+
+  echo " INFO: please compare your local branch with 'merge/remote', then execute '$0 release'"
 }
 
 release() {
