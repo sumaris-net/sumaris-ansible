@@ -119,8 +119,8 @@ fetch() {
   git switch -c merge/local || exit 1
   decrypt
   check_merge_branch
-  git add -A || exit 1
-  git commit --no-verify -m 'merge/local' || exit 1
+  git add -A
+  git commit --no-verify -m 'merge/local'
 
   # Remove merge branches
   git branch -d merge/local
