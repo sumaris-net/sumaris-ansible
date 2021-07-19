@@ -133,7 +133,7 @@ fetch() {
 
   # Checkout origin/master into merge/remote
   git checkout origin/master || exit 1
-  git switch -c temporary || exit 1
+  git switch -c merge/remote || exit 1
   decrypt
   git commit --no-verify -m 'merge/remote' || exit 1
   git add -A || exit 1
