@@ -128,7 +128,6 @@ fetch() {
   # Switch to merge/local branch, then commit decrypted files
   git switch -c merge/local || exit 1
   decrypt
-  check_merge_branch
   git add -A
   git commit --no-verify -m 'merge/local'
 
@@ -136,7 +135,6 @@ fetch() {
   git checkout origin/master || exit 1
   git switch -c temporary || exit 1
   decrypt
-  check_merge_branch
   git commit --no-verify -m 'merge/remote' || exit 1
   git add -A || exit 1
 
@@ -176,9 +174,9 @@ check_user_branch() {
 check_merge_branch() {
   cd ${BASEDIR}
   echo "GIT branch: $GIT_BRANCH"
-  if [[ ! "$GIT_BRANCH" =~ ^merge/[a-zA-Z0-9]+$ ]];
+  if [[ ! "$GIT_BRANCH" =~ ^merge/[a-z]+$ ]];
   then
-    echo ">> The command '$COMMAND' must be run under a users/*** branch"
+    echo ">> The command '$COMMAND' must be run under a merge/*** branch"
     exit 1
   fi
 }
