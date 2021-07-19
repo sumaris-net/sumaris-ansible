@@ -84,7 +84,10 @@ check_encrypted() {
 
 commit() {
   cd "${BASEDIR}" || exit 1
-  echo "Commit with message: '$GIT_MESSAGE'"
+  if [[ "_$GIT_MESSAGE" = "_" ]]; then
+    echo "ERROR: missing 'message' argument"
+    exit 1
+  fi
   # Encrypt
   OK=$(encrypt)
   if [[ $? -ne 0 ]]; then
@@ -92,9 +95,12 @@ commit() {
     [[ $? -ne 0 ]] && exit 1
     echo " Continue, because all files are encrypted"
   fi
+
   # Add all files
   echo "Adding missing file to git..."
   git add -A || exit 1
+  echo "Adding missing file to git [OK]"
+
   # Commit
   git commit --no-verify -m ''"$GIT_MESSAGE"'' || exit 1
   echo "-- Successfully committed to ${GIT_BRANCH}"
