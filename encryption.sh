@@ -121,12 +121,13 @@ fetch() {
   echo "--- Fetching remote changes [OK]"
 
   git checkout origin/master || exit 1
-  git switch temporary
+  git switch temporary || exit 1
   decrypt
+  git merge "${GIT_BRANCH}" || exit 1
 }
 
 push() {
-  cd ${BASEDIR}
+  cd ${BASEDIR} || exit 1
   check_master_branch
   echo "Pushing changes to master..."
 }
