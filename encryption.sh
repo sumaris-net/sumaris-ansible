@@ -90,7 +90,7 @@ commit() {
   if [[ $? -ne 0 ]]; then
     OK=$(check_encrypted)
     [[ $? -ne 0 ]] && exit 1
-    echo " Skip encryption (all files are encrypted)"
+    echo " Continue, because all files are encrypted"
   fi
   # Add all files
   echo "Adding missing file to git..."
