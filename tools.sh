@@ -109,9 +109,6 @@ commit() {
   echo "--- Committing to ${GIT_BRANCH}..."
   git commit --no-verify -m ''"$GIT_MESSAGE"''
   echo "--- Committing to ${GIT_BRANCH} [OK]"
-
-  # Decrypt
-  decrypt
 }
 
 
@@ -135,7 +132,7 @@ merge() {
 
   # Checkout origin/master into merge/remote
   git checkout origin/master || exit 1
-  git branch -d merge/remote
+  git branch -D merge/remote
   git switch -c merge/remote || exit 1
   decrypt
   git add -A || exit 1
@@ -161,18 +158,17 @@ release() {
   fetch_origin
 
   # delete merge branch
-  git branch -d merge/remote
+  git branch -D merge/remote
 
-  echo "-- Merging $GIT_BRANCH to master..."
+  echo "-- Merging branch '$GIT_BRANCH' into master..."
   git checkout origin/master || exit 1
   git checkout master || exit 1
   git merge "$GIT_BRANCH" || exit 1
   git push
-  echo "-- Merging $GIT_BRANCH to master [OK]"
+  echo "-- Merging branch '$GIT_BRANCH' into master [OK]"
 
-  # Re open the local users/** branch
+  # Go back to local branch 'users/**'
   git checkout $GIT_BRANCH
-  decrypt
 }
 
 ### Control that the script is run on `master` branch
@@ -236,6 +232,7 @@ check)
 
 commit)
   commit
+  decrypt
 ;;
 
 merge)
@@ -244,6 +241,7 @@ merge)
 
 release)
   release
+  decrypt
 ;;
 
 help)
