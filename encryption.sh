@@ -97,14 +97,16 @@ commit() {
   fi
 
   # Add all files
+  echo ""
   echo "--- Adding missing file to git..."
   git add -A || exit 1
-  echo " Adding missing file to git [OK]"
+  echo "--- Adding missing file to git [OK]"
 
   # Commit
+  echo ""
   echo "--- Committing to ${GIT_BRANCH}..."
   git commit --no-verify -m ''"$GIT_MESSAGE"'' || exit 1
-  echo " Committing to ${GIT_BRANCH} [OK]"
+  echo "--- Committing to ${GIT_BRANCH} [OK]"
 }
 
 push() {
