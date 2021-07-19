@@ -144,15 +144,21 @@ merge() {
   git merge merge/remote || exit 1
 }
 
-push() {
+release() {
   cd "${BASEDIR}" || exit 1
+
+  # commit local changes
   check_user_branch
+  commit
+
+  # fetch origin
   fetch_origin
 
   echo "-- Merging $GIT_BRANCH to master..."
   git checkout origin/master || exit 1
   git merge "$GIT_BRANCH" || exit 1
   git push
+  echo "-- Merging $GIT_BRANCH to master [OK]"
 }
 
 ### Control that the script is run on `master` branch
@@ -222,8 +228,8 @@ merge)
   merge
 ;;
 
-push)
-  push
+release)
+  release
 ;;
 
 help)
