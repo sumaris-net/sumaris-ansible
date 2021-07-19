@@ -86,10 +86,11 @@ commit() {
   cd "${BASEDIR}" || exit 1
   echo "Commit with message: '$GIT_MESSAGE'"
   # Encrypt
-  ENCRYPT=$(encrypt)
+  OK=$(encrypt)
   if [[ $? -ne 0 ]]; then
     echo "Encryption failed. Checking all files encrypted..."
-    check_encrypted || exit 1
+    OK=$(check_encrypted)
+    [[ $? -ne 0 ]] && exit 1
   fi
   # Add all files
   echo "Adding missing file to git..."
