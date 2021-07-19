@@ -139,7 +139,7 @@ fetch() {
   git add -A || exit 1
 
   # Merge branches
-  git merge "${GIT_BRANCH}" || exit 1
+  git merge merge/local || exit 1
 }
 
 push() {
